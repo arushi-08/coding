@@ -2,17 +2,23 @@
 # def isBadVersion(version: int) -> bool:
 
 class Solution:
-    def firstBadVersion(self, n: int) -> int:
+    def firstBadVersion(self, n: int, start=1) -> int:
         
-        left = 1
+        if isBadVersion(start):
+            return start
+        left = start
         right = n
-        while(left < right):
-            mid = (left + right)//2
+        ans = 0 
+        while left <= right:
+            
+            mid = int(right + left)//2
             
             if isBadVersion(mid):
-                right = mid
+                ans = mid
+                right = mid - 1
+                # return self.firstBadVersion(mid, start)
             else:
                 left = mid + 1
+                # return self.firstBadVersion(n, mid)
         
-        return right
-        
+        return ans
