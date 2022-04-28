@@ -1,27 +1,29 @@
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
         
-        # nums.sort()
-        # print(nums)
-        ptr = len(nums)-1
-        ptr1 = 0
-        
         for i in range(len(nums)):
-            if target - nums[i] in nums[:i] + nums[i+1:]:
-                if nums.index(target - nums[i]) == i:
-                    return [i, nums.index(target - nums[i], i + 1)]
-                return [i, nums.index(target - nums[i])]
+            for j in range(len(nums)):
+                
+                if i != j:
+                    if nums[i] + nums[j] == target:
+                        return [i, j]
+        return [-1, -1]
         
-        # ptr2 = len(nums) - 1
         
-        # while(ptr1 != ptr):
-        #     if nums[ptr1] + nums[ptr] == target:
-        #         print(nums[ptr], ptr)
-        #         return [ptr1, ptr]
-        #     elif nums[ptr1] + nums[ptr] > target:
-        #         nums[ptr] -= 1
-        #     else:
-        #         nums[ptr1] += 1
-                    
-                    
-        return [-1,-1]
+#         nums.sort()
+#         left = 0
+#         right = len(nums) - 1
+#         while (left < right):
+            
+#             s = nums[left] + nums[right]
+#             if s < target:
+#                 left += 1
+#             elif s > target:
+#                 right -= 1
+            
+#             else:
+#                 return [left, right]
+        
+#         return [-1, -1]
+            
+        
