@@ -4,19 +4,19 @@ class Solution:
         if x == 1:
             return 1
         
-        left = 1
-        right = x
-        
-        while(left<=right):
-            mid = (left + right) // 2
+        l = 1
+        r = x//2
+        ans = 0
+        while l <= r:
+            mid = (l + r) // 2
             
-            if mid*mid <= x and (mid+1)*(mid+1) > x:
+            if mid*mid == x:
                 return mid
             
             if mid*mid < x:
-                left = mid + 1
+                l = mid + 1
             
             else:
-                right = mid -1
+                r = mid - 1
         
-        return 0
+        return l - 1
