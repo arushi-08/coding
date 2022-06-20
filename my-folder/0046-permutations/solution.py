@@ -1,26 +1,28 @@
 class Solution:
-    def __init__(self):
-        self.res = []
+    # def __init__(self):
+        # self.res = []
         
     def permute(self, nums: List[int]) -> List[List[int]]:
         
         chosen = [False] * len(nums)
         res = []
-        
-        self.backtrack(nums, chosen)
-        return self.res
+        self.dfs(nums, [], chosen, res)
+        return res
     
-    def backtrack(self, nums, chosen, permutations=[]):
-            
-        if len(permutations) == len(nums):
-            self.res.append(permutations.copy())
+    def dfs(self, nums, curr_permutation, chosen, res):
+        
+        if len(curr_permutation) == len(nums):
+            res.append(curr_permutation.copy())
             return
+        
         for i in range(len(nums)):
             if not chosen[i]:
-                permutations.append(nums[i])
+                curr_permutation.append(nums[i])
                 chosen[i] = True
-                self.backtrack(nums, chosen, permutations)
+
+                self.dfs(nums, curr_permutation, chosen, res)
+
+                curr_permutation.remove(nums[i])
                 chosen[i] = False
-                permutations.remove(nums[i])
-        
+            
         
