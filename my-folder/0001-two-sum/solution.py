@@ -1,29 +1,15 @@
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
         
-        for i in range(len(nums)):
-            for j in range(len(nums)):
-                
-                if i != j:
-                    if nums[i] + nums[j] == target:
-                        return [i, j]
-        return [-1, -1]
+        hmap = {}
         
-        
-#         nums.sort()
-#         left = 0
-#         right = len(nums) - 1
-#         while (left < right):
+        for i, val in enumerate(nums):
+            print(i, val)
+            remaining = target - val
             
-#             s = nums[left] + nums[right]
-#             if s < target:
-#                 left += 1
-#             elif s > target:
-#                 right -= 1
+            if remaining in hmap:
+                return [hmap[remaining], i]
             
-#             else:
-#                 return [left, right]
+            hmap[val] = i
         
-#         return [-1, -1]
-            
-        
+        print(hmap)
