@@ -1,18 +1,14 @@
 class Solution:
-    def climbStairs(self, n: int, memo = {}) -> int:
+    def __init__(self):
+        self.memo = []
+    def climbStairs(self, n: int) -> int:
+        self.memo = [0]*(n + 1)
+        return self.helper(n)
+    
+    def helper(self, n):
+        if n in [0, 1]: return n
+        if n == 2: return 2
         
-        if n in memo:
-            return memo[n]
-        
-        if n <= 1:
-            return n
-        
-        if n == 2:
-            return 2
-        
-        memo[n] = self.climbStairs(n-1) + self.climbStairs(n-2)
-        
-        return memo[n]
-        
-        
-        
+        if self.memo[n] : return self.memo[n]
+        self.memo[n] =  self.helper(n-1) + self.helper(n-2)
+        return self.memo[n]
