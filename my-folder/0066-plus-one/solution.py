@@ -1,19 +1,20 @@
 class Solution:
     def plusOne(self, digits: List[int]) -> List[int]:
+        """loop from end of array
+           keep a variable : carry
+           add carry to each arr[i], if arr[i] > 9: carry = arr[i]%10
+           arr[i] = arr[i]//10
+        """
+        carry = 1
+        for i in range(len(digits)-1, -1, -1):
+            digits[i] += carry
+            if digits[i] > 9:
+                carry = digits[i] // 10
+                digits[i] %= 10
+            else:
+                carry = 0
         
-        n = len(digits)
-        digits[n-1] += 1
-        carry = digits[n-1] / 10
-        digits[n-1] = digits[n-1] % 10
-        
-        for i in range(n-2, -1, -1):
-            
-            if carry == 1:
-                digits[i] += 1
-                carry = digits[i] / 10
-                digits[i] = digits[i] % 10
-        
-        if carry == 1:
-            digits.insert(0, 1)
+        if carry:
+            digits.insert(0, carry)
         
         return digits
