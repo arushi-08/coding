@@ -1,23 +1,17 @@
 class Solution:
-    def __init__(self):
-        self.memo = []
     def minCostClimbingStairs(self, cost: List[int]) -> int:
-        
-        self.memo = [0] * (len(cost) + 1)
-        total_cost = 0
-        return self.helper([0] + cost, 0)
-    
-    def helper(self, cost, idx):
+        # find min cost to climb n - 1 or n - 2
         
         if not cost: return 0
-        # print(self.memo[idx], idx)
-        if self.memo[idx]: return self.memo[idx]
+        n = len(cost)
+        if n == 1: return cost[0]
+
+        dp = [0] * n
+        dp[0] = cost[0]
+        dp[1] = cost[1]
         
-        two_step = self.helper(cost[2:], idx + 2) + cost[0]
-        one_step = self.helper(cost[1:], idx + 1) + cost[0]
-        self.memo[idx] = min(one_step, two_step)
-        # print(cost, idx, one_step, two_step)
+        for i in range(2, n):
+            dp[i] = min(dp[i-1], dp[i-2]) + cost[i]
         
-        return self.memo[idx]
-        
+        return min(dp[-1], dp[-2])
         
