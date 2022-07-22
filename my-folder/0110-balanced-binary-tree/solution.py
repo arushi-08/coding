@@ -7,17 +7,15 @@
 class Solution:
     def isBalanced(self, root: Optional[TreeNode]) -> bool:
         
-        if not root: return True
+        ans, _ = self.helper(root)
+        return ans
     
-        left = self.height(root.left)
-        right = self.height(root.right)
-        left_bal = self.isBalanced(root.left)
-        right_bal = self.isBalanced(root.right)
+    def helper(self, root):
         
-        return abs(left - right) < 2 and left_bal and right_bal
-    
-    
-    def height(self, root):
-        if not root: return 0
+        if not root: return True, 0
         
-        return max(self.height(root.left), self.height(root.right)) + 1
+        left, left_ht = self.helper(root.left)
+        right, right_ht = self.helper(root.right)
+        
+        return (left and right and abs(left_ht - right_ht) <= 1,
+               max(left_ht, right_ht) + 1)
