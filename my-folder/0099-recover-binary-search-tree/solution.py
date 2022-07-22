@@ -9,35 +9,31 @@ class Solution:
         """
         Do not return anything, modify root in-place instead.
         """
+        # 2 nodes are not in BST order
+        if not root or (not root.left and not root.right): return
         
-        if not root: return
-        inorder = []
-        self.helper(root, inorder)
-        wrong_idx_elements = []
-        for i in range(len(inorder)-1):
-            if inorder[i].val < inorder[i+1].val:
-                continue
-            else:
-                if wrong_idx_elements:
-                    wrong_idx_elements.append(i+1)
-                else:
-                    wrong_idx_elements.append(i)
+        inorder_path = self.inorder(root)
+        # print([i.val for i in inorder_path])
         
-        if len(wrong_idx_elements) == 1:
-            self.swap(inorder, wrong_idx_elements[0], wrong_idx_elements[0]+1)
-        else:
-            self.swap(inorder, wrong_idx_elements[0], wrong_idx_elements[1])
-    
-    def swap(self, inorder, node1_idx, node2_idx):
-        
-        inorder[node1_idx].val, inorder[node2_idx].val = inorder[node2_idx].val, inorder[node1_idx].val
-        
+        swap1_node = inorder_path[0]
+        for i in range(1, len(inorder_path)):
+            if inorder_path[i].val < inorder_path[i-1].val:
+                swap1_node = inorder_path[i-1]
+                # print("swap1_node", swap1_node.val)
+                break
+        swap2_node = inorder_path[-1]
+        for i in range(len(inorder_path)-2, -1, -1):
+            if inorder_path[i].val > inorder_path[i+1].val:
+                swap2_node = inorder_path[i+1]
+                # print("swap2_node", swap2_node.val)
+                break
+        swap1_node.val, swap2_node.val = swap2_node.val, swap1_node.val
             
+    
+    def inorder(self, root):
+        if not root: return []
         
-    def helper(self, root, inorder):
+        left = self.inorder(root.left)
+        right = self.inorder(root.right)
         
-        if not root: return
-        
-        self.helper(root.left, inorder)
-        inorder.append(root)
-        self.helper(root.right, inorder)
+        return left + [root] + right
