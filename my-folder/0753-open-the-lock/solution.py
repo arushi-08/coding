@@ -1,27 +1,40 @@
 from collections import deque
 class Solution:
+    
     def openLock(self, deadends: List[str], target: str) -> int:
-        if target == "0000" : return 0
+        # move: turning 1 wheel 1 slot
+        # graph: {digits: neighbouring digits}
+        
         if "0000" in deadends: return -1
         
-        neighbors = {str(i): [str((i+1)%10), str((i-1)%10)] for i in range(10)}
-        queue = deque()
-        queue.append((0, "0000"))
-        result = 0
-        visited = {"0000"} | set(deadends)
+        graph = {}
+        for i in range(10):
+            if i == 0:
+                graph['0'] = ['9', '1']
+            elif i == 9:
+                graph['9'] = ['8', '0']
+            else:
+                graph[str(i)] = [str(i-1), str(i+1)]
         
-        while len(queue):
-            result, curr = queue.popleft()
-            
+        visited = set(deadends)
+        queue = deque()
+        queue.append(('0000', 0))
+        visited.add('0000')
+        
+        while queue:
+            curr, moves = queue.popleft()
             if curr == target:
-                return result
+                return moves
             
             for i in range(len(curr)):
-                for j in neighbors[curr[i]]:
-                    next_move = curr[:i] + j + curr[i+1:]
-                    if next_move not in visited:
-                        queue.append((result + 1, next_move))
-                        visited.add(next_move)
+                for neighbor in graph[curr[i]]:
+                    next_turn = curr[:i] + neighbor + curr[i+1:]
+                    
+                    if next_turn not in visited:
+                        queue.append((next_turn, moves + 1))
+                        visited.add(next_turn)
+                    
                     
         return -1
+                    
         
