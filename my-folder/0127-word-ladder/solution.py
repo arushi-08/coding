@@ -1,38 +1,44 @@
-from collections import deque, defaultdict
+from collections import deque
 class Solution:
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
         
-        if endWord not in wordList or not beginWord or not endWord: return 0
-        queue = deque()
-        queue.append((1, beginWord))
-        visited = {beginWord}
+        if endWord not in wordList: return 0
         
-        word_comb = defaultdict(list)
+        # try drawing a graph
+        # hit: hot
+        # hot: dot, lot
+        # dot: hot, dog, lot
+        # dog: cog, dot, log
+        # lot: dot, hot
         
+        graph = {}
         for word in wordList:
-            for j in range(len(beginWord)):
-                generic_word = word[:j]  + "*" + word[j+1:]
-                word_comb[generic_word].append(word)
+            for i in range(len(beginWord)):
+                generic = word[:i] + "*" + word[i+1:]
+                graph.setdefault(generic, []).append(word)
         
+        queue = deque()
         
-        while len(queue):
-            len_q = len(queue)
-            for _ in range(len_q):
-                result, curr = queue.popleft()
-
-                for i in range(len(curr)):
-                    generic_word = curr[:i] + "*" + curr[i + 1:]
-
-                    if generic_word in word_comb:
-
-                        for wd in word_comb[generic_word]:
-                            if not wd in visited:
-                                if wd == endWord: return result + 1
-                                queue.append((result + 1, wd))
-                                visited.add(wd)
-
+        queue.append((beginWord, 1))
+        
+        visited = set([beginWord])
+        
+        while queue:
+            currword, moves = queue.popleft()
+            
+            if currword == endWord:
+                return moves
+            
+            for i in range(len(currword)):
+                generic = currword[:i] + "*" + currword[i+1:]
+                if generic in graph:
+                    for word in graph[generic]:
+                        if word not in visited:
+                            queue.append((word, moves+1))
+                            visited.add(word)
 
         return 0
-    
+            
         
+                
         
