@@ -1,39 +1,37 @@
-from heapq import heappush, heapify
+from heapq import heappush
 class MedianFinder:
 
     def __init__(self):
-        self.arr = []
-        self.min_heap = []
-        self.max_heap = []
-        self.max_size = 0
-        self.min_size = 0
+        self.minheap = []
+        self.maxheap = []
 
     def addNum(self, num: int) -> None:
-        if len(self.max_heap) == 0 or num < -self.max_heap[0]:
-            heappush(self.max_heap, -num)
-        else:
-            heappush(self.min_heap, num)
-        if len(self.max_heap) - len(self.min_heap) > 1:
-            heappush(self.min_heap, -heappop(self.max_heap))
-        elif len(self.min_heap) - len(self.max_heap) > 1:
-            heappush(self.max_heap, -heappop(self.min_heap))
-        # print(self.max_heap, self.min_heap)
+        if len(self.maxheap) == 0:
+            heappush(self.maxheap, -num)
+            return
         
-    def findMedian(self) -> float:
-        """ 1 2 3 4    -1 -2 -3"""
-        # h1 = self.arr[:(self.idx)//2]
-        # h2 = self.arr[(self.idx)//2:]
-        # heapify([-h for h in h1])
-        # heapify(h2)
-        if len(self.max_heap) == len(self.min_heap):
-            return (-self.max_heap[0] + self.min_heap[0]) / 2
-        elif (len(self.max_heap) > len(self.min_heap)):
-            return -self.max_heap[0]
-        return self.min_heap[0]
-        #     else:
-                
+        if -self.maxheap[0] > num:
+            heappush(self.maxheap, -num)
+        else:
+            heappush(self.minheap, num)
+        
+        if len(self.minheap) > len(self.maxheap) + 1:
+            heappush(self.maxheap, -heappop(self.minheap))
+        elif len(self.minheap) + 1< len(self.maxheap):
+            heappush(self.minheap, -heappop(self.maxheap))
         
 
+    def findMedian(self) -> float:
+        if len(self.minheap) == len(self.maxheap):
+            median = (self.minheap[0] - self.maxheap[0])/2
+            
+        elif len(self.minheap) > len(self.maxheap):
+            median = self.minheap[0]
+        
+        else:
+            median = -self.maxheap[0]
+            
+        return median
 
 # Your MedianFinder object will be instantiated and called as such:
 # obj = MedianFinder()
