@@ -4,10 +4,7 @@ class Solution:
         currsum = float("-inf")
         maxsum = float("-inf")
         for i in range(len(nums)):
-            if currsum + nums[i] < nums[i]:
-                currsum = nums[i]
-            else:
-                currsum += nums[i]
-            maxsum = max(currsum, maxsum)
+            currsum = max(currsum + nums[i], nums[i])
+            maxsum = max(maxsum, currsum)
         
         return maxsum
