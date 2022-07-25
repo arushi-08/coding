@@ -1,14 +1,21 @@
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        # don't take adjacent vals, maximize nums sum
-        if not nums: return 0
-        n = len(nums)
-        if n == 1: return nums[0]
-        dp = [0]*n
-        dp[0] = nums[0]
-        dp[1] = max(nums[0], nums[1])
+        # adjacent not
+        # [1,2,3,1]
+        # 1 + [2,3,1] 0 + [2,3,1]
+        # 3 + [3,1] 1 + [3,1]  2 + [3,1] 0 + [3,1]
+        # idx -> len(nums) 
         
-        for i in range(2, n):
-            dp[i] = max(dp[i-2]+nums[i], dp[i-1])
         
-        return max(dp[-1], dp[-2])
+        dp = [0] * (len(nums))
+        
+        for i in range(len(nums)):
+            if i == 0:
+                dp[i] = nums[i]
+                continue
+            if i == 1:
+                dp[i] = max(nums[i], nums[i-1])
+                continue
+            dp[i] = max(nums[i] + dp[i-2], dp[i-1])
+        
+        return dp[len(nums)-1]
