@@ -6,9 +6,19 @@
 class Solution:
     def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
         
-        curr = head
-        while curr and curr.next:
-            while curr and curr.next and curr.val == curr.next.val:
-                curr.next = curr.next.next
-            curr = curr.next
+        if not head or not head.next:
+            return head
+        
+        ptr1 = head
+        ptr2 = head.next
+        
+        while ptr2:
+            if ptr1.val != ptr2.val:
+                ptr1.next = ptr2
+                ptr1 = ptr1.next
+            
+            ptr2 = ptr2.next
+        
+        ptr1.next = None
         return head
+                
