@@ -1,14 +1,36 @@
 class Solution:
     def maxDistToClosest(self, seats: List[int]) -> int:
         
-        ones = iter(i for i,seat in enumerate(seats) if seat)
-        prev = front_zeros = next(ones)
-        mid_zeros = 0
-        for i in ones:
-            mid_zeros = max(mid_zeros, i - prev - 1)
-            prev = i
+        prev = None
+        people = []
+        for i, seat in enumerate(seats):
+            if seat:
+                people.append(i)
         
-        rear_zeros = len(seats) - prev - 1
-        
-        return max(front_zeros, (mid_zeros + 1) >> 1, rear_zeros)
+        people = iter(people)
+        future = next(people, None)
+        ans = 0
+        for i in range(len(seats)):
+            if seats[i]:
+                prev = i
+            else:
+                while future is not None and future < i:
+                    future = next(people, None)
                 
+                if prev is None:
+                    left_distance = float("inf")
+                else:
+                    left_distance = i - prev
+                
+                if future is None:
+                    right_distance = float("inf")
+                else:
+                    right_distance = future - i
+                
+                ans = max(ans, min(left_distance, right_distance))
+        
+        return ans
+                    
+                    
+                    
+                    
