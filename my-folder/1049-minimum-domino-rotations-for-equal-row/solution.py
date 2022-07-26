@@ -1,29 +1,38 @@
 class Solution:
-    def minDominoRotations(self, tops: List[int], bottoms: List[int]) -> int:
+    def minDominoRotations(self, A: List[int], B: List[int]) -> int:
         
-        candidate1 = tops[0]
-        candidate2 = bottoms[0]
-        
-        candidate_common_list = []
-        for candidate in [candidate1, candidate2]:
-            candidate_common = True
-            for i in range(1, len(tops)):
-                if candidate != tops[i] and candidate != bottoms[i]:
-                    candidate_common = False
-                    break
-            if candidate_common:
-                candidate_common_list.append(candidate)
-        
-        if not candidate_common_list:
-            return -1
-        
-        global_swaps = len(tops)
-        for candidate in candidate_common_list:
-            N = len(tops)
-            global_swaps = min([global_swaps, N - tops.count(candidate), N - bottoms.count(candidate)])
-        
-        return global_swaps
+        def check(x):
+            """
+            Return min number of swaps 
+            if one could make all elements in A or B equal to x.
+            Else return -1.
+            """
+            # how many rotations should be done
+            # to have all elements in A equal to x
+            # and to have all elements in B equal to x
+            rotations_a = rotations_b = 0
+            for i in range(n):
+                # rotations coudn't be done
+                if A[i] != x and B[i] != x:
+                    return -1
+                # A[i] != x and B[i] == x
+                elif A[i] != x:
+                    rotations_a += 1
+                # A[i] == x and B[i] != x    
+                elif B[i] != x:
+                    rotations_b += 1
+            # min number of rotations to have all
+            # elements equal to x in A or B
+            return min(rotations_a, rotations_b)
+    
+        n = len(A)
+        rotations = check(A[0]) 
+        # If one could make all elements in A or B equal to A[0]
+        if rotations != -1:
+            return rotations 
+        # If one could make all elements in A or B equal to B[0]
+        else:
+            return check(B[0])
             
-        
         
         
