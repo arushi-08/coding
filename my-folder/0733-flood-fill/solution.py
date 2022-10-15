@@ -1,37 +1,33 @@
 from collections import deque
 class Solution:
-    def isSafe(self, x, y, visited, image, current_color):
-        return (x >= 0 
-                and y >= 0 
-                and x < len(image) 
-                and y < len(image[0]) 
-                and visited[x][y] == False
-                and image[x][y] == current_color)
-        
     def floodFill(self, image: List[List[int]], sr: int, sc: int, color: int) -> List[List[int]]:
         
-        current_color = image[sr][sc]
+        return self.bfs(image, sr, sc, image[sr][sc], color)
+    
+    def bfs(self, image, sr, sc, orig_color, color):
         
-        visited = [[False]*len(image[0]) for _ in range(len(image))]
-        visited[sr][sc] = True
+        q = deque()
+        q.append((sr, sc))
+        rows = [1, 0, -1, 0]
+        cols = [0, 1, 0, -1]
+        visited = [[False] * len(image[0]) for i in range(len(image))]
+        while q:
+            curr_row, curr_col = q.popleft()
+            image[curr_row][curr_col] = color
+            for i in range(4):
+                if self.isSafe(image, 
+                               curr_row + rows[i], 
+                               curr_col + cols[i], 
+                               orig_color,
+                               visited
+                              ):
+                    q.append((curr_row + rows[i], curr_col + cols[i]))
+                    visited[curr_row + rows[i]][curr_col + cols[i]] = True
         
-        queue = deque()
-        queue.append((sr, sc))
-        
-        while queue:
-            curr_x, curr_y = queue.popleft()
-            image[curr_x][curr_y] = color
-            
-            possible_moves_x = [1, 0, -1, 0]
-            possible_moves_y = [0, -1, 0, 1]
-            
-            for x, y in zip(possible_moves_x, possible_moves_y):
-                if self.isSafe(curr_x + x, 
-                               curr_y + y, 
-                               visited, 
-                               image, 
-                               current_color):
-                    visited[curr_x + x][curr_y + y] = True
-                    queue.append((curr_x + x, curr_y + y))
-                    
         return image
+    
+    def isSafe(self, image, row, col, orig_color, visited):
+        return 0 <= row and row < len(image) and 0 <= col and col < len(image[0]) and image[row][col] == orig_color and not visited[row][col]
+                    
+            
+        
