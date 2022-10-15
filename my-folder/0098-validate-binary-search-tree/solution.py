@@ -7,31 +7,24 @@
 class Solution:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
         
-        if not root : return True
-        if not root.left and not root.right: return True
+        if not root:
+            return True
         
-        max_left = self.findmax(root.left)
-        min_right = self.findmin(root.right)
-        left = self.isValidBST(root.left)
-        right = self.isValidBST(root.right)
-        
-        return root.val < min_right and root.val > max_left and left and right
-        
-        
-    def findmin(self, root):
-        
-        if not root: return float("inf")
-        
-        left = self.findmin(root.left)
-        right = self.findmin(root.right)
-        
-        return min(root.val, left, right)
+        return (
+            self.helper(root.left, -float('inf'), root.val) 
+         & self.helper(root.right, root.val, float('inf'))
+        )
     
-    def findmax(self, root):
+    def helper(self, root, left_limit, right_limit):
+        if not root:
+            return True
         
-        if not root: return float("-inf")
+        ans = (self.helper(root.left, left_limit, root.val) 
+         & self.helper(root.right, root.val, right_limit))
         
-        left = self.findmax(root.left)
-        right = self.findmax(root.right)
         
-        return max(root.val, left, right)
+        if left_limit < root.val < right_limit:
+            return ans & True
+        return ans & False
+            
+            
