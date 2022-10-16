@@ -1,15 +1,11 @@
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-        
         hmap = {}
-        
-        for i, val in enumerate(nums):
-            print(i, val)
-            remaining = target - val
+        for i in range(len(nums)):
+            remain = target - nums[i]
+            if remain in hmap:
+                return [i, hmap[remain]]
             
-            if remaining in hmap:
-                return [hmap[remaining], i]
+            hmap[nums[i]] = i
             
-            hmap[val] = i
-        
-        print(hmap)
+        return [-1,-1]
