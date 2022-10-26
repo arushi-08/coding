@@ -6,6 +6,7 @@ class Solution:
         
         left = 1
         right = n
+        
         while left < right:
             mid = (left + right) // 2
             if isBadVersion(mid):
@@ -15,5 +16,4 @@ class Solution:
         
         if isBadVersion(left):
             return left
-        
         return -1
