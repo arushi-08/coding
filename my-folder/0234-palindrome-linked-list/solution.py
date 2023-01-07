@@ -6,42 +6,44 @@
 class Solution:
     def isPalindrome(self, head: Optional[ListNode]) -> bool:
         
-        if not head: return False
-        if not head.next: return True
+        if not head or not head.next: return True
+
         slow = head
         fast = head
-        head2 = None
-        while slow and fast and fast.next:
-            
+
+        while fast and fast.next:
             fast = fast.next.next
-            
-            if not fast or not fast.next:
-                head2 = slow.next
-                slow.next = None
-                
-            slow = slow.next
-#         2 -> 1 -> 0
-        curr = head2
+            if fast:
+                slow = slow.next
+        
+        mid = slow
+        # reverse ll from end to mid.next
+        if not fast:
+            p1 = mid.next
+        else:
+            p1 = mid
         prev = None
-        while curr:
-            
-            temp = curr.next
-            curr.next = prev
-            prev = curr
-            curr = temp
-        
-        head2 = prev
-        
-        curr1 = head
-        curr2 = head2
-        
-        while curr1 and curr2:
-            if curr1.val != curr2.val:
+        while p1:
+            # None 2 1
+            temp = p1.next # temp = 1
+            p1.next = prev # p1.next = None 2 -> None
+            prev = p1
+            p1 = temp
+        # match ll1 with ll2
+        mid.next = None
+        ll2 = prev
+        ll1 = head
+        while ll1 and ll2:
+            if ll1.val != ll2.val:
                 return False
-            curr1 = curr1.next
-            curr2 = curr2.next
+            ll1 = ll1.next
+            ll2 = ll2.next
+                
+        if ll1:
+            return False
+        if ll2:
+            return False
         
         return True
-            
-            
-        
+
+
