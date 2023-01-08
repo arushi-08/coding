@@ -1,18 +1,18 @@
 class Solution:
     def majorityElement(self, nums: List[int]) -> int:
-        
-        if not nums: return -1
+        #               3 ,2 , 3   2, 2, 1, 1, 1, 2, 2
+        # counter       1  1.  1.  1, 2, 1, 1, 2, 1, 1
+        # i             3  2   3.  2, 2, 2, 1, 1, 1, 2
+
         counter = 1
-        current = nums[0]
+        memory = nums[0]
         for i in range(1, len(nums)):
-            if nums[i] == current:
+            if memory == nums[i]:
                 counter += 1
             else:
-                counter -= 1
-                if counter == 0:
-                    current = nums[i]
-                    counter += 1
+                if counter == 1:
+                    memory = nums[i]
+                else:
+                    counter -= 1
         
-        if counter > 0:
-            return current
-        return 0
+        return memory
