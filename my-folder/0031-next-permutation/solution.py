@@ -3,28 +3,49 @@ class Solution:
         """
         Do not return anything, modify nums in-place instead.
         """
-        if not nums or len(nums)==1: return nums
-        
-        ptr1 = ptr2 = len(nums)-1
-#         pick 1st ascending from right, 3 5 
-        while ptr1 > 0 and nums[ptr1] <= nums[ptr1 - 1]:
-            ptr1 -= 1
-        
-        ptr1 = ptr1 - 1
-#         if all descending
-        if ptr1 == -1:
+
+        i = len(nums) - 1
+
+        while i > 0:
+            if nums[i] > nums[i-1]:
+                break
+            else:
+                i -= 1
+        if i == 0:
+            # all decreasing
             nums.reverse()
             return
         
-        while nums[ptr1] >= nums[ptr2]:
-            ptr2 -= 1
-        
-        nums[ptr1], nums[ptr2] = nums[ptr2], nums[ptr1]
-        
-        l, r = ptr1+1, len(nums)-1
-        while l < r:
-            nums[l], nums[r] = nums[r], nums[l]
-            l += 1
-            r -= 1
-        
-        return
+        # if i == len(nums) - 1:
+        #     nums[i], nums[0] = nums[0], nums[i]
+        #     j,k = 1,len(nums)-1
+        #     while j<k:
+        #         nums[j],nums[k] = nums[k], nums[j]
+        #         j += 1
+        #         k -= 1
+
+        #     return
+
+        j = i
+        # swap i-1 with j
+        first_greater_elem = 100
+        first_greater_elem_idx = -1
+        while j < len(nums):
+            if nums[j] > nums[i-1]:
+                first_greater_elem = min(first_greater_elem, nums[j])
+                if first_greater_elem == nums[j]:
+                    first_greater_elem_idx = j
+            j += 1
+        # print(first_greater_elem_idx, i-1)
+        if first_greater_elem_idx == -1:
+            first_greater_elem_idx = i
+        nums[first_greater_elem_idx], nums[i-1] = nums[i-1], nums[first_greater_elem_idx]
+
+        k = len(nums)-1
+        while i<k:
+            nums[i],nums[k] = nums[k], nums[i]
+            i += 1
+            k -= 1
+        return 
+
+
