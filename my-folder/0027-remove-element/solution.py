@@ -1,20 +1,31 @@
 class Solution:
     def removeElement(self, nums: List[int], val: int) -> int:
+
+        # remove all occurrences [3,2,2,3] swap 3 with last element
+        last_ptr = len(nums)-1
         
-        remove_ptr = 0
-        non_remove_ptr = len(nums)-1
-        while remove_ptr < non_remove_ptr:
-            if nums[remove_ptr] == val:
-                while non_remove_ptr > remove_ptr and nums[non_remove_ptr] == val:
-                    non_remove_ptr -= 1
-                if non_remove_ptr > remove_ptr:
-                    nums[remove_ptr], nums[non_remove_ptr] = nums[non_remove_ptr], nums[remove_ptr] 
-                    non_remove_ptr -= 1
-                    remove_ptr += 1
-                else:
-                    break
+        while last_ptr > 0:
+            if nums[last_ptr] == val:
+                last_ptr -= 1
             else:
-                remove_ptr += 1
-        
-        return len(nums) - nums.count(val)
+                break
+        if last_ptr < 0 : return 0 
+        if last_ptr == 0:
+            if nums[0] == val:
+                return 0 
                 
+        i = 0
+        while i < last_ptr and last_ptr > 0:
+            if nums[i] == val:
+                k = i
+                while k <  last_ptr and last_ptr > 0:
+                    nums[k], nums[k+1] = nums[k+1], nums[k]
+                    k += 1
+                last_ptr -= 1
+            
+            if nums[i] != val:
+                i += 1
+        
+        return last_ptr + 1
+            
+
