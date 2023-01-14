@@ -1,11 +1,12 @@
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-        hmap = {}
+
+        # 2, 9, 20,35. 3, 5, 9
+        hm = {}
         for i in range(len(nums)):
-            remain = target - nums[i]
-            if remain in hmap:
-                return [i, hmap[remain]]
-            
-            hmap[nums[i]] = i
-            
-        return [-1,-1]
+            complement = target - nums[i]
+            if complement in hm:
+                return [i, hm[complement]]
+            hm[nums[i]] = i
+    
+        return []
