@@ -1,24 +1,15 @@
 class Solution:
-    def sortedSquares(self, arr: List[int]) -> List[int]:
+    def sortedSquares(self, nums: List[int]) -> List[int]:
+        print(nums)
         left = 0
-        right = len(arr)-1
-        output = [0] * len(arr)
-        output_idx = len(arr)-1
-
-        while left <= right:
-            left_squared = pow(arr[left], 2)
-            right_squared = pow(arr[right], 2)
-            if left_squared > right_squared:
-                output[output_idx] = left_squared
+        right = len(nums) - 1
+        result = [0]*len(nums)
+        for i in range(len(nums)-1, -1, -1):
+            if abs(nums[left]) > abs(nums[right]):
+                answer = nums[left]
                 left += 1
             else:
-                output[output_idx] = right_squared
+                answer = nums[right]
                 right -= 1
-            output_idx -= 1
-
-        return output
-
-                
-        
-            
-            
+            result[i] = answer*answer
+        return result
