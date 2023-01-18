@@ -1,23 +1,18 @@
 from collections import Counter
 class Solution:
     def findAnagrams(self, s: str, p: str) -> List[int]:
-        
+            # s = cbaebabacd , p = abc o/p = [0, 6]
+        if len(s) < len(p): return []
         i = 0
-        j = 0
-        hmap = {}
-        ans = []
-        p_freq = Counter(p)
-        # print(p_freq)
-        window = Counter(s[j:len(p)+j])
+        j = len(p) - 1
+        freq_p = Counter(p)
+        answer = []
         while j < len(s):
-            # print("window", window)
-            if window == p_freq:
-                ans.append(j)
-                
-            j += 1
-            if j + len(p) - 1 >= len(s):
-                break
-            window[s[i]] -= 1
-            window[s[j + len(p) - 1]] = window.get(s[j + len(p) - 1], 0) + 1
+            window = Counter(s[i:j + 1])
+            if window == freq_p:
+                answer.append(i)
             i += 1
-        return ans
+            j += 1
+        return answer    
+            
+
