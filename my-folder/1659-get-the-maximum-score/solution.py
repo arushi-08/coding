@@ -1,32 +1,33 @@
 class Solution:
-    def maxSum(self, A1: List[int], A2: List[int]) -> int:
-        
-        i, j = 0, 0
-        psum1, psum2 = 0, 0
-        maxsum = 0
-        while i < len(A1) and j < len(A2):
-            if A1[i] > A2[j]:
-                psum2 += A2[j]
+    def maxSum(self, nums1: List[int], nums2: List[int]) -> int:
+
+        # calculate local up and bottom sums, at meeting point check which has greater sum,
+        # save greater sum in global answer
+
+        global_answer = 0
+        sum1 = 0
+        sum2 = 0
+        i = 0
+        j = 0
+        result = 0
+        while i < len(nums1) and j < len(nums2):
+            if nums1[i] == nums2[j]:
+                result += max(sum1, sum2) + nums1[i]
+                sum1, sum2 = 0, 0
+                i += 1
                 j += 1
-            elif A1[i] < A2[j]:
-                psum1 += A1[i]
+            elif nums1[i] < nums2[j]:
+                sum1 += nums1[i]
                 i += 1
             else:
-                maxsum += max(psum1, psum2) + A1[i]
-                i += 1
+                sum2 += nums2[j]
                 j += 1
-                psum1, psum2 = 0, 0
-        
-        while i < len(A1):
-            psum1 += A1[i]
+        while i < len(nums1):
+            sum1 += nums1[i]
             i += 1
-        while j < len(A2):
-            psum2 += A2[j]
+        while j < len(nums2):
+            sum2 += nums2[j]
             j += 1
-        
-        maxsum += max(psum1, psum2)
-        
-        return maxsum % 1000000007
-            
-        
-        
+
+        return (result + max(sum1, sum2)) % (10**9 + 7)
+
