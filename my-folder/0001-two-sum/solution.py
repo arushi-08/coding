@@ -1,12 +1,11 @@
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-
-        # 2, 9, 20,35. 3, 5, 9
-        hm = {}
+        
+        secondsum_map = {}
         for i in range(len(nums)):
-            complement = target - nums[i]
-            if complement in hm:
-                return [i, hm[complement]]
-            hm[nums[i]] = i
-    
-        return []
+            second_element = target - nums[i]
+            if second_element in secondsum_map:
+                return [secondsum_map[second_element], i]
+            secondsum_map[nums[i]] = i
+        
+        return -1
