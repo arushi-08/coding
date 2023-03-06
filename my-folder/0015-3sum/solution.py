@@ -1,18 +1,18 @@
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-
-        i = 0
-        hm = {}
+        
+        set1 = set()
+        set2 = {}
         ans = set()
-        dups = set()
-        while i < len(nums):
-            if i not in dups:
-                dups.add(i)
+        for i in range(len(nums)):
+            if i not in set1:
+                set1.add(i)
                 for j in range(i+1, len(nums)):
-                    remain = -nums[i] -nums[j]
-                    if remain in hm and hm[remain] == i:
-                        ans.add(tuple(sorted((remain, nums[i], nums[j]))))
-                    hm[nums[j]] = i
-            i += 1
+                    remain = -(nums[i] + nums[j])
+                    if remain in set2 and set2[remain] == i:
+                        ans.add(tuple(sorted([nums[i], nums[j], remain])))
+                    set2[nums[j]] = i
+        
+        return list(ans)
 
-        return ans
+
