@@ -4,18 +4,19 @@
 #         self.val = val
 #         self.left = left
 #         self.right = right
-import math
 class Solution:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
-
-        def validate(node, low=-math.inf, high=math.inf):
-            if not node:
-                return True
-            if node.val <= low or node.val >= high:
+        
+        def validate(node, 
+        left=float('-inf'), 
+        right=float('inf')):
+            if not node: return True
+            print(node.val, left, right)
+            if node.val <= left or node.val >= right:
                 return False
             
-            return validate(node.right, node.val, high) and validate(node.left, low, node.val)
+            return validate(node.left, left, node.val) and validate(node.right, node.val, right)
         
         return validate(root)
-            
-            
+
+
