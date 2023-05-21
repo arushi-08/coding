@@ -1,29 +1,19 @@
 class Solution:
-
     def productExceptSelf(self, nums: List[int]) -> List[int]:
+        if set(nums) == set([0]): return nums
+        product = 1
+        second_product = 1
+        for i in range(len(nums)):
+            if nums[i] == 0 and second_product == product:
+                pass
+            else:
+                second_product *= nums[i]
+            product *= nums[i]
         
-        # left_nums = [1] * len(nums)
-        # for i in range(1,len(nums)):
-        #     left_nums[i] *= left_nums[i-1] * nums[i-1]
+        for i in range(len(nums)):
+            if nums[i] == 0:
+                nums[i] = second_product
+            else:
+                nums[i] = product//nums[i]
 
-        # right_nums = [1] * len(nums)
-        # for i in range(len(nums)-2, -1, -1):
-        #     right_nums[i] *= right_nums[i+1] * nums[i+1]
-        
-        # output_nums = []
-        # for i in range(len(nums)):
-        #     output_nums.append(left_nums[i] * right_nums[i])
-        
-        # return output_nums
-
-        output = [1] * len(nums)
-        for i in range(1, len(nums)):
-            output[i] *= output[i-1] * nums[i-1]
-
-        R = 1
-        for i in range(len(nums)-1,-1,-1):
-            output[i] = output[i] * R
-            R *= nums[i]
-
-        return output
-
+        return nums
