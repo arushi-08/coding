@@ -7,35 +7,29 @@ class Node:
         self.right = right
         self.next = next
 """
-
+from collections import deque
 class Solution:
     def connect(self, root: 'Node') -> 'Node':
-        
-        if root == None:
-            return None
-        
-        queue = []
-        queue.append(root)
-        
-        temp = None
-        while(len(queue) > 0):
-            
-            for i in range(len(queue)):
-                prev = temp
-                temp = queue.pop(0)
-                if i > 0:
-                    prev.next = temp
-                if temp.left != None:
-                    queue.append(temp.left)
-                    
-                if temp.right != None:
-                    queue.append(temp.right)
-
-            # temp.next = None
-
+        # do bfs get next element in same level and populate it
+        if not root: return None
+        queue = deque()
+        queue.append((1,root))
+        bfs = [(1,root)]
+        while queue:
+            currlevel, currnode = queue.popleft()
+            # print('currlevel', currlevel)
+            for i in range(currlevel):
+                if currnode.left:
+                    bfs.append((currlevel+1, currnode.left))
+                    queue.append((currlevel+1, currnode.left))
+                if currnode.right:
+                    bfs.append((currlevel+1, currnode.right))
+                    queue.append((currlevel+1, currnode.right))
+                break
+            # print('queue', queue)
+        for i in range(len(bfs)-1):
+            if bfs[i][0] == bfs[i+1][0]:
+                bfs[i][1].next = bfs[i+1][1]        
         return root
-        
-            
-        
-        
-            
+
+
