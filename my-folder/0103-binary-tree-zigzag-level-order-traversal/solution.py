@@ -7,11 +7,11 @@
 from collections import deque
 class Solution:
     def zigzagLevelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
-        
         if not root: return []
         queue = deque()
         queue.append(root)
         ans = []
+        count = 0
         while len(queue):
             l = len(queue)
             temp = []
@@ -22,9 +22,14 @@ class Solution:
                     queue.append(curr.left)
                 if curr.right:
                     queue.append(curr.right)
-            ans.append(temp)
-        
-        for idx, i in enumerate(ans):
-            if idx % 2 == 1:
-                i.reverse()
+            
+            if count % 2 == 1:
+                tempreverse = []
+                for i in range(len(temp)-1,-1,-1):
+                    tempreverse.append(temp[i])
+                ans.append(tempreverse)
+            else:
+                ans.append(temp)
+            count += 1
         return ans
+
