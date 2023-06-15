@@ -8,19 +8,28 @@ class Node:
 from collections import deque
 class Solution:
     def cloneGraph(self, node: 'Node') -> 'Node':
-        if not node:
-            return node
-        
-        visited = {}
+        if not node: return node
+        visited = []
         queue = deque()
-        queue.append(node)
-        visited[node] = Node(node.val)
+        newnode = Node(node.val)
+        queue.append((node, newnode))
+        visited = {}
         while len(queue):
-            curr = queue.popleft()
+            curr, currnew = queue.popleft()
+            visited[curr] = currnew
             for n in curr.neighbors:
                 if n not in visited:
-                    queue.append(n)
-                    visited[n] = Node(n.val)
-                visited[curr].neighbors.append(visited[n])
-        
-        return visited[node]
+                    nnew = Node(n.val)
+                    visited[n] = nnew
+                    currnew.neighbors.append(nnew)
+                    queue.append((n, nnew))
+                else:
+                    currnew.neighbors.append(visited[n])
+
+        # for n in newnode.neighbors:
+        #     print('n neighbors: ',n.val)
+        #     for i in n.neighbors:
+        #         print(i.val)
+
+        return newnode
+
