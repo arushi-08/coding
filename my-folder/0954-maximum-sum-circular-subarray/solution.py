@@ -1,14 +1,32 @@
 class Solution:
-    def maxSubarraySumCircular(self, nums: List[int]) -> int:
-        curr_maxsum = float("-inf")
-        global_maxsum = float("-inf")
-        curr_minsum = float("inf")
-        global_minsum = float("inf")
+    def getmaxsum(self, nums):
+        currsum = 0
+        maxsum = float('-inf')
         for i in range(len(nums)):
-            curr_maxsum = max(curr_maxsum + nums[i], nums[i])
-            global_maxsum = max(global_maxsum, curr_maxsum)
-            curr_minsum = min(curr_minsum + nums[i], nums[i])
-            global_minsum = min(global_minsum, curr_minsum)
-        if global_maxsum > 0:
-            return max(sum(nums)-global_minsum, global_maxsum)
-        return global_maxsum
+            if currsum + nums[i] > nums[i]:
+                currsum += nums[i]
+            else:
+                currsum = nums[i]
+            maxsum = max(currsum, maxsum)
+        return maxsum
+
+    def getminsum(self, nums):
+        currsum = 0
+        minsum = float('inf')
+        
+        for i in range(len(nums)):
+            if currsum + nums[i] < nums[i]:
+                currsum += nums[i]
+            else:
+                currsum = nums[i]
+            minsum = min(currsum, minsum)
+        return minsum
+
+    def maxSubarraySumCircular(self, nums: List[int]) -> int:
+        
+        max1 = self.getmaxsum(nums)
+        totalsum = sum(nums)
+        max2 = totalsum - self.getminsum(nums)
+        return max(max1, max2) if max1 >=0 else max1
+
+
