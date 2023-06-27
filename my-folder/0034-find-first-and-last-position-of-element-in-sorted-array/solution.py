@@ -1,45 +1,37 @@
 class Solution:
     def searchRange(self, nums: List[int], target: int) -> List[int]:
-        
-        if not nums or target not in nums:
-            return [-1, -1]
-        
-        l = 0
-        r = len(nums) - 1
-        lower_bound = len(nums) - 1
-        
-        while(l < r):
-            mid = (l + r) // 2
-            if nums[mid] == target:
-                r = mid
-                lower_bound = min(mid, lower_bound)
-            
-            elif nums[mid] > target:
-                r = mid
-            
-            else:
-                l = mid + 1
-        
-        l = 0
-        r = len(nums) - 1
-        upper_bound = 0
-        
-        while(l < r):
-            mid = (l + r) // 2
-            print(nums[mid], mid, l, r)
+        ansstart, anssend = -1, -1
+        if not nums: return [ansstart, anssend]
+        start = 0
+        end = len(nums)-1
+        while start <= end:
+            mid = (start + end) // 2
             
             if nums[mid] == target:
-                l = mid + 1
-                upper_bound = max(mid, upper_bound)
-            
+                ansstart = mid
+                end = mid - 1
             elif nums[mid] > target:
-                r = mid
-            
+                end = mid - 1
             else:
-                l = mid + 1
+                start = mid + 1
+
+        if 0<=start<len(nums) and nums[start] == target:
+            ansstart = start
+
+        start = ansstart
+        end = len(nums)-1
+        while start <= end:
+            mid = (start + end) // 2
+            if nums[mid] == target:
+                anssend = mid
+                start = mid + 1
+            elif nums[mid] < target:
+                start = mid + 1
+            else:
+                end = mid - 1
+
+        if 0<=end<len(nums) and nums[end] == target:
+            anssend = end
         
-        if nums[l] == target:
-            upper_bound = l
-        return [lower_bound, upper_bound]
-        
+        return [ansstart, anssend]
         
