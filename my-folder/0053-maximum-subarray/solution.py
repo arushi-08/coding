@@ -3,12 +3,13 @@ class Solution:
         
         currsum = nums[0]
         maxsum = currsum
+        start = 0
         for i in range(1, len(nums)):
-            if nums[i] + currsum > nums[i]:
+            if currsum + nums[i] > nums[i]:
                 currsum += nums[i]
             else:
                 currsum = nums[i]
-            maxsum = max(currsum, maxsum)
+            maxsum = max(maxsum, currsum)
         
-        return maxsum
-
+        return max(maxsum, currsum)
+        
