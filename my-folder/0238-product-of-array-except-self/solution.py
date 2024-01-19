@@ -1,13 +1,22 @@
 class Solution:
     def productExceptSelf(self, nums: List[int]) -> List[int]:
+        prod, prod2 = 1, 1
+        num_zeros = 0
+        for i in range(len(nums)):
+            prod *= nums[i]
+            if nums[i] == 0:
+                num_zeros += 1
+                continue
+            prod2 *= nums[i]
+            
+        answer = []
         
-
-        ans = [0] * len(nums)
-        ans[0] = 1
-        for i in range(1, len(nums)):
-            ans[i] = ans[i-1] * nums[i-1]
-        R = 1
-        for i in range(len(nums)-1,-1,-1):
-            ans[i] = ans[i]*R
-            R *= nums[i]
-        return ans
+        for i in range(len(nums)):
+            if num_zeros > 1:
+                answer.append(0)
+            elif nums[i] == 0:
+                answer.append(prod2)
+            else:
+                answer.append(prod // nums[i])
+            
+        return answer
