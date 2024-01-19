@@ -1,18 +1,13 @@
-from collections import Counter
+from collections import defaultdict
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
-
-        hmap = {}
-        for i in range(len(strs)):
-            # print()
-            # print(sorted(Counter(strs[i])))
-            key = tuple(sorted([(key, val) for key, val in Counter(strs[i]).items()]))
-            if key in hmap:
-                hmap[key].append(strs[i])
-            else:
-                hmap[key] = [strs[i]]
-        ans = []
         
-        for key, val in hmap.items():
-            ans.append(val)
-        return ans
+        answer = []
+        temp_dict = defaultdict(list)
+        for i in range(len(strs)):
+            temp_dict[tuple(sorted(strs[i]))].append(strs[i])
+            
+        for key, val in temp_dict.items():
+            answer.append(val)
+        return answer
+
