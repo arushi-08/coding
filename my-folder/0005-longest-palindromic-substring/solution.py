@@ -1,23 +1,26 @@
 class Solution:
     def longestPalindrome(self, s: str) -> str:
-        # start from each char as center, check if it can be center of a palindrome
-        maxlength = 0
-        def checklength(st, ed):
-            ans = ''
-            passonce = 0
-            while st >= 0 and ed < len(s) and s[st] == s[ed]:
-                st -= 1
-                ed += 1
-            return st+1, ed
-        st, ed = 0, 0
-        for i in range(len(s)):
-            l, r = checklength(i, i)
-            if r-l > (ed-st):
-                st, ed = l, r
-            l, r = checklength(i, i+1)
-            if r-l > (ed-st):
-                st, ed = l, r
-
-        return s[st:ed]
-            
         
+        res = ''
+        reslen = 0
+        
+        for i in range(len(s)):
+            l, r = i, i
+            while l >= 0 and r < len(s) and s[l] == s[r]:
+                if r - l + 1 > reslen:
+                    reslen = r - l + 1
+                    res = s[l : r + 1]
+                    
+                l -= 1
+                r += 1
+            
+            l, r = i, i + 1
+            while l >= 0 and r < len(s) and s[l] == s[r]:
+                if r - l + 1 > reslen:
+                    reslen = r - l + 1
+                    res = s[l : r + 1]
+                    
+                l -= 1
+                r += 1
+            
+        return res
