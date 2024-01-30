@@ -1,23 +1,21 @@
 class Solution:
     def findMin(self, nums: List[int]) -> int:
         
-
-        start = 0
-        end = len(nums)-1
-        res = float('inf')
-        while start <= end:
-            mid = (start + end)//2
-            res = min(res, nums[mid])
-            if nums[mid] >= nums[start]: # left sorted
-                if nums[start] > nums[end]: # rotated
-                    start = mid + 1
-                else: # not rotated
-                    end = mid - 1
-            
-            else:
-                if nums[start] > nums[end]: # rotated
-                    end = mid - 1
+        left = 0
+        right = len(nums)-1
+        while left < right:
+            mid = (left + right)//2
+            if mid - 1 >= 0 and nums[mid-1] > nums[mid] and mid+1 < len(nums) and nums[mid] < nums[mid+1]:
+                return nums[mid]
+            if nums[left] > nums[right]:
+                if nums[left] > nums[mid]:
+                    right = mid - 1
                 else:
-                    start = mid + 1
-        
-        return nums[start] if nums[start] < res else res
+                    left = mid + 1
+            elif nums[left] < nums[right]:
+                if nums[right] > nums[mid]:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+
+        return nums[left]
