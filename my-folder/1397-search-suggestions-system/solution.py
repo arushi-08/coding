@@ -1,22 +1,20 @@
-# from collections import Trie
 class Solution:
     def suggestedProducts(self, products: List[str], searchWord: str) -> List[List[str]]:
-        
+
         # lexicographically sorting products
         products = sorted(products)
         # --no use tries to store the characters 
         # simple string start
-        output = []
+        output = [[] for _ in searchWord]
+        iproducts = products
+        
         for i in range(len(searchWord)):
-            recommendations = []
-            for prod in products:
-                if prod[:i+1] == searchWord[:i+1]:
-                    recommendations.append(prod)
-                if len(recommendations) == 3:
+            for product in iproducts:
+                if len(product) > i and product[i] == searchWord[i]:
+                    output[i].append(product)
+                elif len(output[i]) > 0:
                     break
-            
-            output.append(recommendations)
-    
+            iproducts = output[i]
+            output[i] = output[i][:3]
+        
         return output
-
-
