@@ -5,31 +5,32 @@ class Node:
         self.val = val
         self.neighbors = neighbors if neighbors is not None else []
 """
-from collections import deque
+from collections import deque, defaultdict
+from typing import Optional
 class Solution:
-    def cloneGraph(self, node: 'Node') -> 'Node':
-        if not node: return node
-        visited = []
-        queue = deque()
-        newnode = Node(node.val)
-        queue.append((node, newnode))
+    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+        
+        if not node: return
+
         visited = {}
-        while len(queue):
-            curr, currnew = queue.popleft()
-            visited[curr] = currnew
-            for n in curr.neighbors:
-                if n not in visited:
-                    nnew = Node(n.val)
-                    visited[n] = nnew
-                    currnew.neighbors.append(nnew)
-                    queue.append((n, nnew))
-                else:
-                    currnew.neighbors.append(visited[n])
+        
+        copynode = self.helper(node, visited)
 
-        # for n in newnode.neighbors:
-        #     print('n neighbors: ',n.val)
-        #     for i in n.neighbors:
-        #         print(i.val)
+        return copynode
+        
+    def helper(self, node, visited):
 
-        return newnode
+        queue = deque()
+        copynode = Node(node.val)
+        queue.append(node)
+        visited[node] = copynode
+        while queue:
+            og = queue.popleft()
+            for neigh in og.neighbors:
+                if neigh not in visited:
+                    visited[neigh] = Node(neigh.val)
+                    queue.append(neigh)
+                visited[og].neighbors.append(visited[neigh])
+        
+        return visited[node]
 
