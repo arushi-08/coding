@@ -1,23 +1,23 @@
 class Solution:
     def generateParenthesis(self, n: int) -> List[str]:
-
-        res = []
-        # brackets = ['(']*n + [')']*n
-        # opencount
-        def backtrack(opencount, closecount, path):
-            if opencount == closecount == n:
-                res.append("".join(path))
+        
+        # given n pair of parentheses
+        # write function to generate all combinations of well-formed parentheses
+        ans = []
+        def dfs(left_count, right_count, res):
+            if len(res) == n*2: 
+                ans.append(''.join(res))
                 return
             
-            # for i in range(n):
-            if opencount < n:
-                path.append('(')
-                backtrack(opencount+1, closecount, path)
-                path.pop()
-            if closecount < opencount:
-                path.append(')')
-                backtrack(opencount, closecount+1, path)
-                path.pop()
+            if left_count < n:
+                res.append('(')
+                dfs(left_count+1, right_count, res)
+                res.pop()
+
+            if right_count < left_count:
+                res.append(')')
+                dfs(left_count, right_count+1, res)
+                res.pop()
         
-        backtrack(0, 0, [])
-        return res
+        dfs(0, 0, [])
+        return ans
