@@ -1,37 +1,34 @@
-class Node:
-    def __init__(self):
-        self.children = {}
-        self.endofword = False
-
-from collections import deque
 class Trie:
+
     def __init__(self):
-        # initialize object
-        self.triemap = Node()
+        self.trie = {}
 
     def insert(self, word: str) -> None:
-        curr = self.triemap
-        for c in word:
-            if c not in curr.children:
-                curr.children[c] = Node()
-            curr = curr.children[c]
-        curr.endofword = True
+        curr = self.trie
+        for i, char in enumerate(word):
+            if char not in curr:
+                curr[char] = {}
+            curr = curr[char]
+        curr[True] = True
+            
 
     def search(self, word: str) -> bool:
-        curr = self.triemap
-        for c in word:
-            if c not in curr.children:
+        curr = self.trie
+        for char in word:
+            if char not in curr:
                 return False
-            curr = curr.children[c]
-        return curr.endofword
+            curr = curr[char]
+        
+        return True in curr
 
     def startsWith(self, prefix: str) -> bool:
-        curr = self.triemap
-        for c in prefix:
-            if c not in curr.children:
+        curr= self.trie
+        for char in prefix:
+            if char not in curr:
                 return False
-            curr = curr.children[c]
+            curr = curr[char]
         return True
+
 
 # Your Trie object will be instantiated and called as such:
 # obj = Trie()
