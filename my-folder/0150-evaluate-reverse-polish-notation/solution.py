@@ -3,20 +3,23 @@ class Solution:
         
         stack = []
         for i in range(len(tokens)):
-            if tokens[i].lstrip("-").isdigit():
-                stack.append(int(tokens[i]))
+            if tokens[i] == '+':
+                digit1 = stack.pop()
+                digit2 = stack.pop()
+                stack.append(digit1 + digit2)
+            elif tokens[i] == '-':
+                digit1 = stack.pop()
+                digit2 = stack.pop()
+                stack.append(digit2 - digit1)
+            elif tokens[i] == '*':
+                digit1 = stack.pop()
+                digit2 = stack.pop()
+                stack.append(digit1 * digit2)
+            elif tokens[i] == '/':
+                digit1 = stack.pop()
+                digit2 = stack.pop()
+                stack.append(int(digit2 / digit1))
             else:
-                # print(stack)
-                b = stack.pop()
-                a = stack.pop()
-                # print(a,b, tokens[i])
-                if tokens[i] == '+':
-                    stack.append(a+b)
-                elif tokens[i] == '*':
-                    stack.append(a*b)
-                elif tokens[i] == '-':
-                    stack.append(a-b)
-                else:
-                    stack.append(int(float(a)/b))
-                # print(stack)
+                stack.append(int(tokens[i]))
+            # print('stack', stack)
         return stack.pop()
