@@ -1,25 +1,33 @@
 class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
-        intervals.sort(key= lambda x: x[0])
+        
+        intervals.sort(key = lambda x: x[0])
+        if not intervals: return []
+        curr = 0
+        remove_idx = set()
+        print("intervals")
+        print(intervals)
+        gap = 1
+        for i in range(1,len(intervals)):
+            # print("curr", curr, i, intervals[curr], intervals[i])
+            if intervals[curr][1] >= intervals[i][0]:
+                # merge them
+                intervals[curr] = [min(
+                    intervals[curr][0],
+                    intervals[i][0]
+                ), max(
+                    intervals[curr][1],
+                    intervals[i][1]
+                )]
+                remove_idx.add(i)
+                gap += 1
+            else:
+                curr += gap
+                gap = 1
+            # print("curr", curr, i, intervals[curr])
         ans = []
-        i = 1
-        curr_start = intervals[0][0]
-        curr_end = intervals[0][1]
-        while i < len(intervals):
-            # curr_start = intervals[i][0]
-            # curr_end = intervals[i][1]
-            if curr_end < intervals[i][1]:
-                if curr_end >= intervals[i][0]:
-                    curr_end = intervals[i][1]
-                else:
-                    ans.append([curr_start, curr_end])
-                    curr_start = intervals[i][0]
-                    curr_end = intervals[i][1]
-            i += 1
-        if not ans or ans[-1] != [[curr_start, curr_end]]:
-            ans.append([curr_start, curr_end])
+        for i in range(len(intervals)):
+            if i in remove_idx:
+                continue
+            ans.append(intervals[i])
         return ans
-
-            
-
-            
