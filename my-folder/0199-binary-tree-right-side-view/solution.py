@@ -7,22 +7,27 @@
 from collections import deque
 class Solution:
     def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
-        # do bfs and print the right value
+        
         if not root: return []
+        # do level order traversal
         queue = deque()
         queue.append(root)
-        ans = []
-        while len(queue):
-            l = len(queue)
-            temp = []
-            for _ in range(l):
+        lot = []
+        while queue:
+            temp_ans = []
+            k = len(queue)
+            for i in range(k):
                 curr = queue.popleft()
+                temp_ans.append(curr.val)
                 if curr.left:
                     queue.append(curr.left)
                 if curr.right:
                     queue.append(curr.right)
-                temp.append(curr.val)
-            ans.append(temp[-1])
+                
+            lot.append(temp_ans)
+        
+        ans = []
+        for i in range(len(lot)):
+            ans.append(lot[i][-1])
+
         return ans
-
-
