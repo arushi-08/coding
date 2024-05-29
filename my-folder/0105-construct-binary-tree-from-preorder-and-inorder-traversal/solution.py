@@ -6,33 +6,28 @@
 #         self.right = right
 class Solution:
     def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
-        return self.helper(0,0,len(preorder)-1, inorder, preorder)
-    def helper(self, prestart_idx, instart_idx, inend_idx, inorder, preorder):
         
-        if prestart_idx >= len(preorder) or instart_idx > inend_idx: return None
-        rootval = preorder[prestart_idx]
-        root = TreeNode(rootval)
+        if not preorder:
+            return None
+        
+        pre_idx = 0
 
-        root_idx_in_inorder = 0
-        for i in range(instart_idx, inend_idx+1):
-            if rootval == inorder[i]:
-                root_idx_in_inorder = i
+        inorder_val_to_idx = {}
+        for i in range(len(inorder)):
+            inorder_val_to_idx[inorder[i]] = i
 
-        root.left = self.helper(
-            prestart_idx+1,
-            instart_idx,
-            root_idx_in_inorder-1,
-            inorder, 
-            preorder)
-        root.right = self.helper(
-            prestart_idx+root_idx_in_inorder - instart_idx + 1,
-            root_idx_in_inorder+1,
-            inend_idx,
-            inorder, 
-            preorder
-            )
-    # 3,9,100, 30, 40, 20,15,7 - preorder
-    # 30 100 40 9 3 15 20 7 - inorder
-    # 0 + (root_idx_in_inorder - inorder_start + 1)
-        return root
-            
+        def helper(st, ed):
+            nonlocal pre_idx
+
+            if st > ed:
+                return
+
+            root_val = preorder[pre_idx]
+            pre_idx += 1
+            root = TreeNode(root_val)
+            root.left = helper(st, inorder_val_to_idx[root_val]-1)
+            root.right = helper(inorder_val_to_idx[root_val]+1, ed)
+            return root
+        
+        return helper(0, len(inorder)-1)
+
