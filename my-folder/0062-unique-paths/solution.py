@@ -1,14 +1,20 @@
 class Solution:
+
+    def __init__(self):
+        self.memo = {}
+
     def uniquePaths(self, m: int, n: int) -> int:
         
-        if n == 1 or m == 1:
+
+        # move down or right
+        if m == 1 or n == 1:
             return 1
         
-        dp = [[1]*n for i in range(m)]
+        if m == 2 and n == 2:
+            return 2
         
-        
-        for i in range(1, m):
-            for j in range(1, n):
-                dp[i][j] = dp[i-1][j] + dp[i][j-1]
-        
-        return dp[m-1][n-1]
+        if (m,n) in self.memo:
+            return self.memo[(m,n)]
+
+        self.memo[(m,n)] =  self.uniquePaths(m-1, n) + self.uniquePaths(m, n-1)
+        return self.memo[(m,n)]
