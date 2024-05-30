@@ -1,14 +1,28 @@
-from collections import Counter
+from heapq import heapify, heappop, heappush
 class Solution:
     def leastInterval(self, tasks: List[str], n: int) -> int:
-        busy_time = len(tasks)
-        hmap = Counter(tasks)
-        freq = list(hmap.values())
-        freq.sort()
-        max_freq = freq.pop()
-        idle_time = (max_freq - 1) * n
+        
+        if not tasks: return 0
+        cooltime = n
 
-        while freq and idle_time > 0:
-            idle_time -= min(max_freq-1, freq.pop())
-        idle_time = max(idle_time, 0)
-        return busy_time + idle_time
+        freq2 = [-v for k,v in Counter(tasks).items()]
+        heapify(freq2)
+        queue = deque()
+        time = 0
+
+        while freq2 or queue:
+            time += 1
+            if freq2:
+                currfreq = heappop(freq2) + 1
+                if currfreq:
+                    queue.append((currfreq, time + cooltime))
+            if queue and queue[0][1] <= time:
+                next_freq , _ = queue.popleft()
+                heappush(freq2, next_freq)
+            
+        return time
+
+
+
+
+
