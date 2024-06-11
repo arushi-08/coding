@@ -6,32 +6,21 @@
 #         self.right = right
 class Solution:
     def isBalanced(self, root: Optional[TreeNode]) -> bool:
+        
         if not root:
             return True
-        return self.helper(root)
-    
+        
+        left = self.isBalanced(root.left)
+        right = self.isBalanced(root.right)
+        leftht = self.helper(root.left)
+        rightht = self.helper(root.right)
+        
+        return left and right and abs(leftht - rightht) <= 1
+        
     def helper(self, root):
         if not root:
-            return True
-        lans = self.helper(root.left)
-        rans = self.helper(root.right)
-        maxdepth = self.maxDepth(root)
-        mindepth = self.minDepth(root)
-        if maxdepth - mindepth > 1:
-            return False
-        return lans and rans and True
-    
-    def maxDepth(self, root):
-        if not root:
             return 0
-        left = self.maxDepth(root.left)
-        right = self.maxDepth(root.right)
-        return max(left, right) + 1
-
-    def minDepth(self, root):
-        if not root:
-            return 0
-        left = self.maxDepth(root.left)
-        right = self.maxDepth(root.right)
-        return min(left, right) + 1
-
+        
+        left = self.helper(root.left) + 1
+        right = self.helper(root.right) + 1
+        return max(left, right)
