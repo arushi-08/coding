@@ -1,10 +1,7 @@
 class Solution:
     def isPowerOfTwo(self, n: int) -> bool:
-        
-        if n == 0: return False
-        
-        while n % 2 == 0:
-            n //= 2
-        return n == 1
+        # reasoning: power of 2 number has just 1 1-bit
+        # and & (n-1) sets this 1 bit to 0
+        return n > 0 and n & (n-1) == 0
             
 
