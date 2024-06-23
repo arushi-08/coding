@@ -1,0 +1,13 @@
+class Solution:
+    def check(self, nums: List[int]) -> bool:
+        
+        flow = 0
+        n = len(nums)
+        for i in range(len(nums)):
+            if nums[i] > nums[(i+1) % n]:
+                flow += 1
+        
+        if flow > 1:
+            return False
+        return True
+
