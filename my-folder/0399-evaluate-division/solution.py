@@ -1,35 +1,50 @@
-from collections import defaultdict, deque
 class Solution:
     def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
-
-        # a/b = 2, b/c = 3
-        # queries: a/c, b/a, a/e, a/a, x/x
-
+        
         graph = defaultdict(list)
-        for (num, den), val in zip(equations, values):
-            graph[num].append([val,den])
-            graph[den].append([1/val,num])
-        # print(graph)
-        def bfs(graph, src, tgt):
-            if src not in graph or tgt not in graph: return -1
-
-            queue = deque()
-            visit = set()
-            queue.append((src, 1))
-            visit.add(src)
-            while len(queue):
-                cursrc, curans = queue.popleft()
-                if cursrc == tgt:
-                    return curans
-                for curwt, curtgt in graph[cursrc]:
-                    if curtgt not in visit:
-                        visit.add(curtgt)
-                        queue.append((curtgt, curans * curwt))
-            return -1
+        edge = {}
+        for e, v in zip(equations, values):
+            n, d = e
+            graph[n].append(d)
+            edge[(n,d)] = v
+            graph[d].append(n)
+            edge[(d,n)] = 1/v
+        
+        def dfs(node, ed, visited, edge, graph):
+            if node == ed:
+                return 1
+            
+            res = 1
+            for nextnode in graph[node]:
+                if nextnode not in visited:
+                    visited.add(nextnode)
+                    res = edge[(node, nextnode)] * dfs(nextnode, ed, visited, edge, graph)
+                    if res:
+                        return res
+                    else:
+                        visited.remove(nextnode)
+            return 0
 
         ans = []
-        for num, den in queries:
-            ans.append(bfs(graph, num, den))
+        for q in queries:
+            st, ed = q
+            
+            if st == ed:
+                if graph[st]:
+                    # print("here", st, ed, graph)
+                    ans.append(1)
+                    continue
+                else:
+                    ans.append(-1)
+                    continue
 
+            visited = set()
+            res = dfs(st, ed, visited, edge, graph)
+            if res:
+                ans.append(res)
+            else:
+                ans.append(-1)
+        
         return ans
 
+            
