@@ -1,27 +1,40 @@
 class Solution:
     def invalidTransactions(self, transactions: List[str]) -> List[str]:
-        
-        res = set()
-        hmap = defaultdict(list)
+    
+        #  a transaction is invalid if amount > 1000
+        # if it occurs within 60 min and in another city
+
+        tmap = defaultdict(list)
+        invalid = set()
         for i, t in enumerate(transactions):
-            user, time, amount, city = t.split(',')
-            hmap[user].append((int(time), city, i))
+            name, time, amount, city = t.split(',')
+            tmap[name].append((int(time) ,i, city))
             if int(amount) > 1000:
-                res.add(i)
-        
-        for k, v in hmap.items():
+                invalid.add(i)
+            
+        # print("tmap", tmap)
+        for k,v in tmap.items():
             v.sort()
-            vlen = len(v)
-            for i in range(vlen):
-                old = v[i]
-                for j in range(i+1, vlen):
-                    new = v[j]
-                    timediff = new[0] - old[0]
-                    if timediff <= 60:
-                        if new[1] != old[1]:
-                            res.add(old[2])
-                            res.add(new[2])
+            print(k)
+            print(v)
+            for i in range(len(v)):
+                timei, idxi, cityi = v[i]
+                for j in range(i+1, len(v)):
+                    timej, idxj, cityj = v[j]
+                    # print("idxi", idxi, idxj, timei, timej)
+                    if timej - timei <= 60:
+                        if cityj != cityi:
+                            invalid.add(idxi)
+                            invalid.add(idxj)
                     else:
                         break
         
-        return [transactions[x] for x in res]
+        ans = []
+        for i in invalid:
+            ans.append(transactions[i])
+
+        return ans
+                    
+        
+        
+
