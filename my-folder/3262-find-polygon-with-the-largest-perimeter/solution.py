@@ -1,17 +1,14 @@
 class Solution:
     def largestPerimeter(self, nums: List[int]) -> int:
         
-        nums.sort(reverse=True)
-        cursum = 0
-        for num in nums:
-            cursum += num
-            # psum.append(cursum)
-        # print(cursum)
-        removed = 0
-        for i in range(len(nums)):
-            if cursum - nums[i] <= nums[i]:
-                nums[i] == 0
-                cursum -= nums[i]
-                removed += 1
-        
-        return cursum if len(nums) - removed >= 3 else -1
+        nums.sort()
+        currsum = nums[0] + nums[1]
+        perimeter = 0
+        for i in range(2, len(nums)):
+            if currsum > nums[i]:
+                perimeter = currsum + nums[i]
+            currsum += nums[i]
+
+        if perimeter:
+            return perimeter
+        return -1
