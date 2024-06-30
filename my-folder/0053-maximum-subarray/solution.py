@@ -1,15 +1,11 @@
 class Solution:
     def maxSubArray(self, nums: List[int]) -> int:
         
-        currsum = nums[0]
-        maxsum = currsum
-        start = 0
-        for i in range(1, len(nums)):
-            if currsum + nums[i] > nums[i]:
-                currsum += nums[i]
-            else:
-                currsum = nums[i]
-            maxsum = max(maxsum, currsum)
+        currsum = float('-inf')
+        maxsum = float('-inf')
+
+        for num in nums:
+            currsum = max(currsum + num, num)
+            maxsum = max(currsum, maxsum)
         
-        return max(maxsum, currsum)
-        
+        return maxsum
