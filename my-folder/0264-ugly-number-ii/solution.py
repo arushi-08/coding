@@ -1,16 +1,18 @@
-from heapq import heappush, heappop
 class Solution:
     def nthUglyNumber(self, n: int) -> int:
         
-        result = []
-        heap = [1]
-        seen = {1}
-        while len(result) < n:
-            curr = heappop(heap)
-            result.append(curr)
-            for m in [2,3,5]:
-                if curr * m not in seen:
-                    seen.add(curr*m)
-                    heappush(heap, curr*m)
-        
-        return result[-1]
+        dp = [0] * n
+        dp[0] = 1
+
+        head2, head3, head5 = 0,0,0
+
+        for i in range(1,n):
+            dp[i] = min(2*dp[head2], 3*dp[head3], 5*dp[head5])
+            if dp[i] == 2*dp[head2]:
+                head2+=1
+            if dp[i] == 3*dp[head3]:
+                head3+=1
+            if dp[i] == 5*dp[head5]:
+                head5+=1
+            # print("dp[i]", dp[i], "head2", head2, "head3", head3, 'head5', head5, "dp", dp)
+        return dp[n-1]
