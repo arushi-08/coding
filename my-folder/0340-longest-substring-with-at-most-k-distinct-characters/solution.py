@@ -1,24 +1,25 @@
 class Solution:
     def lengthOfLongestSubstringKDistinct(self, s: str, k: int) -> int:
-        # 2 pointer - start, end
-        # end moves to len(s)
-        # if end not in hmap - distinct += 1
-        # if distinct > k - while distinct > k 
-        # if hmap[s[start]] == 1: distinct -=1
-        hmap = {}
-        start, end, longest, distinct = 0, 0, 0, 0
-        while end < len(s):
-            if s[end] not in hmap or hmap[s[end]] <= 0:
-                hmap[s[end]] = 1
-                distinct += 1
-                while distinct > k:
-                    longest = max(longest, end-start)
-                    if hmap[s[start]] == 1:
-                        distinct -= 1
-                    hmap[s[start]] -= 1
-                    start += 1
-            else:
-                hmap[s[end]] += 1
-            end += 1
         
-        return max(longest, end-start) # 6 - 2
+        start = 0
+        distinct = 0
+        distinctelements = {}
+        maxlength = 0
+        for end in range(len(s)):
+
+            while distinct > k:
+                distinctelements[s[start]] -= 1
+                if not distinctelements[s[start]]:
+                    del distinctelements[s[start]]
+                    distinct -= 1
+                start += 1
+            
+            if s[end] not in distinctelements:
+                distinct += 1
+            
+            distinctelements[s[end]] = distinctelements.get(s[end],0)+1
+            # print('distinct', distinct, 'k', k, 'end', end, 'start', start)
+            if distinct <= k:
+                maxlength = max(maxlength, end-start+1)
+    
+        return maxlength
