@@ -1,33 +1,51 @@
 class Solution:
     def sortArray(self, nums: List[int]) -> List[int]:
         
-        numscopy = nums.copy()
-        numscopy.sort()
-        if nums == numscopy: return nums
-        else: return numscopy
-        self.quicksort(nums, 0, len(nums)-1)
+        self.merge_sort(nums, 0, len(nums)-1)
         return nums
     
-    def quicksort(self, nums, start, end):
-        if start < end:
-            pivot = self.pivot(nums, start, end) # pivot = 3 [1,2,3,5]
-            self.quicksort(nums, start, pivot-1) # st=0,ed=2
-            self.quicksort(nums, pivot+1, end)
-
-    def pivot(self, nums, start, end):
-        # 3 pointer approach
-        # put all elements less than pivot on left side
-        # all element more than pivot on right side
-
-        i = start-1 # position where next <= element will be placed
-        pivot = random.randint(start, end)
-        nums[pivot], nums[end] = nums[end], nums[pivot]
-        for j in range(start, end):
-            if nums[j] <= nums[end]:
-                i+=1
-                nums[i], nums[j] = nums[j], nums[i]
+    def merge_sort(self, nums, st, ed):
         
-        nums[i+1], nums[end] = nums[end], nums[i+1]
-        return i + 1
+        if st == ed:
+            return
+
+        mid = (st+ed)//2
+        self.merge_sort(nums, st, mid)
+        self.merge_sort(nums, mid+1, ed)
+
+        self.merge(nums, st, mid, ed)
+    
+    def merge(self, nums, st, mid, ed):
+
+        nums1 = nums[st:mid+1]
+        nums2 = nums[mid+1:ed+1]
+        
+        i = 0
+        j = 0
+        k = 0
+        temp = [0]*len(nums1+nums2)
+
+        while i < len(nums1) and j < len(nums2):
+            if nums1[i] <= nums2[j]:
+                temp[k] = nums1[i]
+                i += 1
+            else:
+                temp[k] = nums2[j]
+                j += 1
+            k += 1
+        
+        while i < len(nums1):
+            temp[k] = nums1[i]
+            i += 1
+            k += 1
+        
+        while j < len(nums2):
+            temp[k] = nums2[j]
+            j += 1
+            k += 1
+        
+        nums[st:ed+1] = temp
+
+
         
 
