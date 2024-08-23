@@ -1,25 +1,33 @@
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
         
-        st = 0
-        ed = len(nums)-1
-        while st < ed:
-            mid = (st + ed)//2
-            print("mid", mid, "st", st, "ed", ed)
+
+        start = 0
+        end = len(nums)-1
+        while start < end:
+            mid = (start + end) // 2
+
             if nums[mid] == target:
                 return mid
             
-            if nums[mid] >= nums[st]:
-                # left half is sorted
-                if nums[st] <= target and target < nums[mid]:
-                    ed = mid - 1
-                else:
-                    st = mid + 1
+            if nums[start] == target:
+                return start
             
-            if nums[mid] <= nums[ed]:
-                if nums[mid] < target and target <= nums[ed]:
-                    st = mid + 1
-                else:
-                    ed = mid - 1
+            if nums[end] == target:
+                return end
             
-        return st if nums[st] == target else -1
+            if nums[start] < nums[mid]:
+                if nums[start] < target < nums[mid]:
+                    end = mid - 1
+                else:
+                    start = mid + 1
+            else:
+                if nums[mid] < target < nums[end]:
+                    start = mid + 1
+                else:
+                    end = mid - 1
+            
+        if nums[start] == target:
+            return start
+        
+        return -1
