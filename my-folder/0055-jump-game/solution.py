@@ -1,20 +1,28 @@
 class Solution:
-    def __init__(self):
-        self.memo = {}
-
     def canJump(self, nums: List[int]) -> bool:
         
-        return self.helper(nums, 0)
-    
-    def helper(self, nums, start):
-        if start in self.memo: return self.memo[start]
-        if start >= len(nums)-1:
+        # when n <= 0 - return True
+        # when n = 1 - [0] -> return False
+        # when n = 1 - [>=1] -> return True
+        # n = 2
+        # return f(nums[i+step:]) | f(nums[i+step+1:])
+        # time complexity: n*nums[i], i.e. 10^4 * 10^5
+        
+        if len(nums) == 1: 
             return True
 
-        ans = False
-        for i in range(nums[start], 0, -1):
-            ans = ans | self.helper(nums, start + i)
-            if ans:
-                break
-        self.memo[start] = ans
-        return ans
+        if nums.count(0) == 0:
+            return True
+        
+        maxjump = 0
+
+        for i in range(len(nums)):
+            if maxjump < i:
+                return False
+
+            if maxjump >= len(nums)-1:
+                return True
+            
+            maxjump = max(maxjump, i + nums[i])
+        
+        return False
