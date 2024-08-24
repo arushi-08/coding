@@ -1,17 +1,24 @@
 class Solution:
     def longestCommonPrefix(self, strs: List[str]) -> str:
         
-        common = strs[0]
-        a = strs[0]
-        
-        for s in strs[1:]:
+        # big brain concept:
+        # if we sort the list lexicographically,
+        #   the first and last strings will have the most difference in prefix
+
+        strs = sorted(strs)
+        first_string = strs[0]
+        last_string = strs[-1]
+
+        ans = ''
+        min_length = min(len(first_string), len(last_string))
+
+        for i in range(min_length):
+            if first_string[i] != last_string[i]:
+                return ans
             
-            common = ""
-            for i in range(min(len(a), len(s))):
-                if a[i] == s[i]:
-                    common += a[i]
-                else:
-                    break
-            a = common
+            ans += first_string[i]
         
-        return common
+        return ans
+
+        
+
