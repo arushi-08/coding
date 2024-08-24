@@ -1,13 +1,14 @@
-from collections import defaultdict
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
         
-        answer = []
-        temp_dict = defaultdict(list)
+        # iterate on strs
+        # store items in hmap, indexed by the tuple(sorted(strs))
+        # return hmap.values
+
+        hmap = defaultdict(list)
+
         for i in range(len(strs)):
-            temp_dict[tuple(sorted(strs[i]))].append(strs[i])
-            
-        for key, val in temp_dict.items():
-            answer.append(val)
-        return answer
+            hmap[tuple(sorted(strs[i]))].append(strs[i])
+        
+        return list(hmap.values())
 
