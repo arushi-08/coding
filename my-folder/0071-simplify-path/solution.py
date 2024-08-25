@@ -1,31 +1,25 @@
-import re
 class Solution:
     def simplifyPath(self, path: str) -> str:
         
+        # use stack to pop folders before '..'
+        # reset the curr_path
+        # for loop add '/' to path: path + '/'
+
         stack = []
-        dots = 0
-        dirname = ''
+        curr_path = ''
+        # /home/
+        for c in path + '/':
 
-        for i in path+'/':
-
-            if i == '.':
-                dots += 1
-
-            if i == '/':
-                if set(dirname) == set('.'):
-                    if dots == 2:
-                        if stack:
-                            stack.pop()
-                    elif dots > 2:
-                        stack.append('.'*dots)
+            if c == '/':
+                if curr_path == '..':
+                    if stack:
+                        stack.pop()
                 
-                elif dirname:
-                    stack.append(dirname)
-
-                dirname = ''
-                dots = 0
+                elif curr_path != '' and curr_path != '.':
+                    stack.append(curr_path)
+                curr_path = ''
 
             else:
-                dirname += i
-
-        return '/'+ '/'.join(stack)
+                curr_path += c
+        
+        return '/' + '/'.join(stack)
