@@ -41,7 +41,11 @@ class UnionFind:
 
 class Solution:
     def numIslands2(self, m: int, n: int, positions: List[List[int]]) -> List[int]:
-        
+        '''
+        make curr positions[i] to land
+        check if neighbor is also land -> union the islands
+        return num of islands after converting each pos in positions[i] to land
+        '''
         answer = []
         uf = UnionFind(m*n)
 
