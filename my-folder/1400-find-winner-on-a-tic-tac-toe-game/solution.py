@@ -1,23 +1,38 @@
 class Solution:
     def tictactoe(self, moves: List[List[int]]) -> str:
-        """scores[0] scores[1] scores[2] for rows
-           scores[3] scores[4] scores[5] for cols
-           scores[6] scores[7] for diagonals
-        """
-        scores = [0]*8
-        for i, (row, col) in enumerate(moves):
-            if i % 2 == 0: score = 1
-            else: score = -1
+        
+        # A plays X
+        # B plays O
+        # A will play first
+        # 3x3 grid
+        # just check for matrix[x][:] and then matrix[:][y] for them to be matrix[x][y] (current piece)
+
+        # [[0,0],[2,0],[1,1],[2,1],[2,2]]
+
+        matrix = [['']*3 for _ in range(3)]
+
+        for i in range(len(moves)):
+            x,y = moves[i]
+            if i & 1 == 0:
+                matrix[x][y] = 'A'
+            else:
+                matrix[x][y] = 'B'
             
-            scores[row] += score
-            scores[col + 3] += score
-            if row == col: scores[6] += score
-            if 2 - row == col: scores[7] += score
-            
-        for score in scores:
-            if score == 3: return "A"
-            if score == -3: return "B"
-        return "Draw" if len(moves) == 9 else "Pending"
+            if i >= 4:
+                if matrix[x][0] == matrix[x][1] == matrix[x][2] == matrix[x][y]:
+                    return matrix[x][y]
+                
+                if matrix[0][y] == matrix[1][y] == matrix[2][y] == matrix[x][y]:
+                    return matrix[x][y]
+                    
+                if matrix[0][0] == matrix[1][1] == matrix[2][2] == matrix[x][y]:
+                    return matrix[x][y]
+                
+                if matrix[0][2] == matrix[1][1] == matrix[2][0] == matrix[x][y]:
+                    return matrix[x][y]
+
+        if len(moves) == 9:
+            return 'Draw'
         
-        
-        
+        return 'Pending'
+
