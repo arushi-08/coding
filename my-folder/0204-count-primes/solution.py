@@ -1,17 +1,15 @@
-import math
 class Solution:
     def countPrimes(self, n: int) -> int:
-        
-        if n < 2:
-            return 0
-        
-        ans = [1]*n
-        ans[0] = 0
-        ans[1] = 0
-        for i in range(2, int(math.sqrt(int(n))+1)):
-            
-            if ans[i]:
+        # sieve of eratosthenes - algo
+        primes_list = [1] * n
+        sqrt_n = int(n**0.5) + 1
+
+        for i in range(2, sqrt_n):
+            if primes_list[i]:
                 for j in range(i*i, n, i):
-                    ans[j] = 0
-                
-        return sum(ans)
+                    primes_list[j] = 0
+        
+        return sum(primes_list[2:])
+
+
+
