@@ -1,29 +1,37 @@
+from functools import lru_cache
 class Solution:
+    def get_all_perfect_squares(self, sq_num):
+        squares = []
+        while sq_num:
+            if (sq_num ** 0.5).is_integer():
+                squares.append(sq_num)
+            sq_num -= 1
+        return squares
+
     def numSquares(self, n: int) -> int:
         
-        self.memo = {}
-        return self.helper(n)
-    
-    def helper(self, n):
+        squares = self.get_all_perfect_squares(n)
+        # got all perfect squares
+        # print(squares)
+        memo = {}
+        return self.helper(n, squares, 0, memo)
 
-        if n < 4 and n >= 0:
-            return n
+    def helper(self, n, squares, idx, memo):
+        # return min coins that make up n
+        # knapsack    
+        if n == 0:
+            return 0
+        
+        if n < 0 or idx == len(squares):
+            return float('inf')
 
-        if n in self.memo:
-            return self.memo[n]
+        if (n, idx) in memo:
+            return memo[(n, idx)]
 
-        i = int(n**0.5)
-        ans = n
-        while i > 1:
-            ans = min(ans, self.helper(n - i*i) + 1)
-            i -= 1
-
-        self.memo[n] = ans
-        return ans
+        memo[(n, idx)] = min(
+            self.helper(n-squares[idx], squares, idx, memo) + 1,
+            self.helper(n, squares, idx+1, memo)
+        )
+        return memo[(n, idx)]
 
 
-    # def isprime(self, n):
-    #     for i in range(2, int((n**0.5) + 1)):
-    #         if n % i == 0:
-    #             return False
-    #     return True
