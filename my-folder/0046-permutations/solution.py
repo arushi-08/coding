@@ -1,17 +1,19 @@
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
         
-        def backtrack(res):
+        ans = []
+
+        def dfs(res, ans, nums):
             if len(res) == len(nums):
                 ans.append(res.copy())
                 return
-                
-            for i in nums:
-                if i not in res:
-                    res.append(i)
-                    backtrack(res)
+            
+            for i in range(len(nums)):
+                if nums[i] not in res:
+                    res.append(nums[i])
+                    dfs(res, ans, nums)
                     res.pop()
-    
-        ans = []
-        backtrack([])
+
+        dfs([], ans, nums)
+
         return ans
