@@ -1,49 +1,59 @@
 class Solution:
     def platesBetweenCandles(self, s: str, queries: List[List[int]]) -> List[int]:
         
-        n = len(s)
-        memo = {}
-        begin = -1
-        if s[0] == '*':
-            psum = [1]
-        else:
-            psum = [0]
-        for i in range(1,len(s)):
-            if s[i] == '*':
-                psum.append(psum[-1] + 1) 
-            else:
-                psum.append(psum[-1])
-        
-        leftcandlecount = [-1] * (n)
-        for i in range(n):
-            if s[i] == '|':
-                leftcandlecount[i] = i
-            else:
-                leftcandlecount[i] = leftcandlecount[i-1]
+        bar_idx = []
 
-        rightcandlecount = [-1] * (n)
-        for i in range(n-1,-1,-1): 
-            if s[i] == '|':
-                rightcandlecount[i] = i
-            else:
-                if i == n-1:
-                    continue
-                rightcandlecount[i] = rightcandlecount[i+1]
-
+        for i,ch in enumerate(s):
+            if ch == '|':
+                bar_idx.append(i)
         
         ans = []
-        for query in queries:
-            left, right = query
-            leftcandleidx = rightcandlecount[left]
-            rightcandleidx = leftcandlecount[right]
+        for i in range(len(queries)):
+            left, right = queries[i]
+            # print('left', left)
+            # print('right', right)
 
-            # print("rightcandleidx", rightcandleidx, psum[rightcandleidx])
-            # print("leftcandleidx", leftcandleidx, psum[leftcandleidx])
+            first_bar_on_left = self.lower_bound_search(bar_idx, left, 'LEFT')
+            first_bar_on_right = self.lower_bound_search(bar_idx, right, 'RIGHT')
+            
+            # print('first_bar_on_left', first_bar_on_left)
+            # print('first_bar_on_right', first_bar_on_right)
 
-            if rightcandleidx >= left and right >= leftcandleidx:
-                count = psum[rightcandleidx] - psum[leftcandleidx]
+            if first_bar_on_left == -1:
+                ans.append(0)
+                continue
+                
+            if bar_idx[first_bar_on_right] > right:
+                first_bar_on_right -= 1
+
+            if left <= bar_idx[first_bar_on_right] and right >= bar_idx[first_bar_on_left]:
+                res = bar_idx[first_bar_on_right] - bar_idx[first_bar_on_left] - (first_bar_on_right - first_bar_on_left)
             else:
-                count = 0
-            ans.append(count)
+                res = 0
+
+            ans.append(res)
         
         return ans
+    
+    def lower_bound_search(self, bar_idx, left_query_bar, BAR_SIDE):
+
+        start = 0
+        end = len(bar_idx) - 1
+        res = len(bar_idx)
+        # print('enter')
+        while start <= end:
+            mid = (start + end) // 2
+            if bar_idx[mid] >= left_query_bar:
+                # print(bar_idx[mid], left_query_bar)
+                res = min(mid, res)
+                # print('res', res)
+                end = mid - 1
+            else:
+                start = mid + 1
+        
+        if res == len(bar_idx):
+            if BAR_SIDE == 'RIGHT':
+                return res - 1
+            return -1
+        return res
+    
