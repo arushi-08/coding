@@ -3,4 +3,12 @@ class Solution:
         
         if needle not in haystack:
             return -1
-        return haystack.index(needle)
+        
+        n = len(haystack)
+        n_needle = len(needle)
+
+        for i in range(n - n_needle+1):
+            if haystack[i:i+n_needle] == needle:
+                return i
+        
+
