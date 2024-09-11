@@ -2,23 +2,27 @@ class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
         
         intervals.sort(key = lambda x: x[0])
-
-        newintervals = []
+        new_intervals = []
+        print(intervals)
         i = 0
-        counter = 0
+        # [[1,3],[2,6],[8,10],[15,18]]
+
         while i < len(intervals):
             sti, edi = intervals[i]
-            preved = edi
-            j = i + 1
+            j = i+1
+            max_end = edi
             while j < len(intervals):
+                # stj=2 | edj=6
+                # j = 2
                 stj, edj = intervals[j]
-                if stj <= preved:
-                    preved = max(preved, edj)
+                if max_end >= stj:
+                    max_end = max(max_end, edj)
+                    j += 1
                 else:
                     break
-                j += 1
-            
-            newintervals.append([sti, preved])
+            # new_intervals = [[1,6],]
+            # i = 2
+            new_intervals.append([sti, max(max_end, intervals[j-1][1])])
             i = j
-
-        return newintervals
+        
+        return new_intervals
