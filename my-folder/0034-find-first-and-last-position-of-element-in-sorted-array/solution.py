@@ -1,37 +1,41 @@
 class Solution:
     def searchRange(self, nums: List[int], target: int) -> List[int]:
-        ansstart, anssend = -1, -1
-        if not nums: return [ansstart, anssend]
+        
+        first = self.find_first(nums, target)
+        last = self.find_last(nums, target)
+        return [first, last]
+
+    def find_first(self, nums, target):
+
         start = 0
         end = len(nums)-1
+        ans = -1
         while start <= end:
             mid = (start + end) // 2
-            
             if nums[mid] == target:
-                ansstart = mid
+                ans = mid
                 end = mid - 1
-            elif nums[mid] > target:
-                end = mid - 1
-            else:
+
+            elif nums[mid] < target:
                 start = mid + 1
+            else:
+                end = mid - 1
+        
+        return ans
 
-        if 0<=start<len(nums) and nums[start] == target:
-            ansstart = start
+    def find_last(self, nums, target):
 
-        start = ansstart
+        start = 0
         end = len(nums)-1
+        ans = -1
         while start <= end:
             mid = (start + end) // 2
             if nums[mid] == target:
-                anssend = mid
+                ans = mid
                 start = mid + 1
             elif nums[mid] < target:
                 start = mid + 1
             else:
                 end = mid - 1
-
-        if 0<=end<len(nums) and nums[end] == target:
-            anssend = end
         
-        return [ansstart, anssend]
-        
+        return ans
