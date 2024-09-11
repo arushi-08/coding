@@ -1,11 +1,11 @@
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
+
+        seen = {}
+        for i, num in enumerate(nums):
+            if target - num in seen:
+                return [seen[target - num], i]
+            
+            seen[num] = i
         
-        secondsum_map = {}
-        for i in range(len(nums)):
-            second_element = target - nums[i]
-            if second_element in secondsum_map:
-                return [secondsum_map[second_element], i]
-            secondsum_map[nums[i]] = i
         
-        return -1
