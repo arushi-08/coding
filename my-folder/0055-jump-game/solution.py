@@ -3,19 +3,18 @@ class Solution:
         
         if len(nums) == 1:
             return True
-        
         if nums.count(0) == 0:
             return True
-            
-        maxjump = 0
 
+        max_jump = nums[0]
         for i in range(len(nums)):
-            if maxjump < i:
+            
+            if max_jump < i:
                 return False
-            
-            if maxjump > len(nums)-1:
+
+            max_jump = max(max_jump, i + nums[i])
+            # print('max_jump', max_jump)
+            if max_jump >= len(nums):
                 return True
-            
-            maxjump = max(maxjump, i + nums[i])
         
         return True
