@@ -1,28 +1,24 @@
-from math import log10, floor
 class Solution:
     def reverse(self, x: int) -> int:
         
-        if x == 0: return 0
-        sign = x > 0
+        sign = True # positive
+        if x < 0:
+            sign = False
+
         x = abs(x)
-        x_reverse = 0
-        count = floor(log10(x))
-        # x = 123
-        # count = 2 | x_reverse += 300
-        # count = 1 | x = 12 | x_reverse += 20
-        # count = 0 | x = 1 | x_reverse += 1
+
+        new_x = 0
         while x:
-            quotient, remainder = divmod(x, 10)
-            x_reverse += remainder * 10**count
-            x = quotient
-            count -= 1
+            new_x *= 10
+            new_x += (x % 10)
+            x //= 10
         
-        if sign:
-            if x_reverse > (2**31)-1: 
-                return 0
-            return x_reverse
-        
-        if - x_reverse < -(2**31):
+        if new_x >= 2**31 and sign:
             return 0
         
-        return -x_reverse
+        if new_x > 2**31 and not sign:
+            return 0
+
+        if not sign:
+            return -new_x
+        return new_x
