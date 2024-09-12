@@ -1,21 +1,19 @@
 class Solution:
     def trap(self, height: List[int]) -> int:
-        # [0,1,0,2,1,0,1,3, 2, 1, 2, 1]
+        # prefix max & suffix max
+        # curr water trapped = min(prefixmax, suffixmax) - height[i]
+        n = len(height)
+        prefix_max = [0] * n
+        suffix_max = [0] * n
+        prefix_max[0] = height[0]
+        suffix_max[-1] = height[-1]
 
-        maxleft = height[0]
-        maxright = height[-1]
-        st, ed = 0, len(height)-1
-        water = [0] * len(height)
+        for i in range(1, n):
+            prefix_max[i] = max(height[i], prefix_max[i-1])
+            suffix_max[n-1-i] = max(height[n-1-i], suffix_max[n-i])
+
+        trapped_water = 0
+        for i in range(len(height)):
+            trapped_water += min(prefix_max[i], suffix_max[i]) - height[i]
         
-        while st <= ed:
-
-            if maxleft < maxright:
-                water[st] = max(maxleft - height[st], 0)
-                maxleft = max(maxleft, height[st])
-                st += 1
-            else:
-                water[ed] = max(maxright - height[ed], 0)
-                maxright = max(maxright, height[ed])
-                ed -= 1
-
-        return sum(water)
+        return trapped_water
