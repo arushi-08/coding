@@ -5,37 +5,37 @@ class Solution:
         # s2 = 'dbbca'
         # s3 = 'aadbbcbcac'
 
-        # if both s1ptr, s2ptr point to same ptr on s3
-        # increment both and check what is the next char on s3
-        # decrement the ptr on s1/s2, i.e., not matching next char of s3
+        # why does greedy not work?
+        # s1 = aac
+        # s2 = aca
+        # s3 = aacaac
 
-        # dp method
-        self.memo = {}
+        # O(n^2) soln:
+        #   nested loop
+        '''
+        for i -> len(s1):
+            for j -> len(s2)
+                if we can find s2 in s3
+                and compare if the remaining chars form s1
+                then True
+                else: false
+        '''
+        if len(s3) != len(s1) + len(s2):
+            return False
+        
 
-        def dfs(p1,p2,p3):
-            if p1 == len(s1) and p2 == len(s2) and p3 == len(s3):
-                return True
-            if p3 == len(s3) or (p1 == len(s1) and p2 == len(s2)):
-                return False
+        dp = [[False] * (len(s2)+1) for _ in range(len(s1)+1)]
+        dp[-1][-1] = True
 
-            if (p1,p2,p3) in self.memo:
-                return self.memo[(p1,p2,p3)]
+        for i in range(len(s1),-1,-1):
+            for j in range(len(s2),-1,-1):
+                
+                if i < len(s1) and s1[i] == s3[i+j] and dp[i+1][j]:
+                    dp[i][j] = True
+                    continue
 
-            ans = False
-            not_eql = False
+                if j < len(s2) and s2[j] == s3[i+j] and dp[i][j+1]:
+                    dp[i][j] = True
 
-            if p1 < len(s1):
-                if s1[p1] == s3[p3]:
-                    ans |= dfs(p1+1, p2, p3+1)
-                else:
-                    ans |= False
-            if p2 < len(s2):
-                if s2[p2] == s3[p3]:
-                    ans |= dfs(p1, p2+1, p3+1)
-                else:
-                    ans |= False
+        return dp[0][0]
 
-            self.memo[(p1,p2,p3)] = ans
-            return ans
-
-        return dfs(0,0,0)
