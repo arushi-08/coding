@@ -4,17 +4,16 @@ class Solution:
         
         # return numislands
         numislands = 0
-        visited = set()
         for i in range(len(grid)):
             for j in range(len(grid[0])):
-                if grid[i][j]=='1' and (i,j) not in visited:
-                    visited.add((i,j))
-                    self.bfs(grid, i, j, visited)
+                if grid[i][j]=='1':
+                    grid[i][j] = '0'
+                    self.bfs(grid, i, j) 
                     numislands += 1
         
         return numislands
     
-    def bfs(self, grid, i, j, visited):
+    def bfs(self, grid, i, j):
 
         queue = deque()
         queue.append((i,j))
@@ -26,14 +25,14 @@ class Solution:
             currx, curry = queue.popleft()
 
             for i in range(len(rows)):
-                if self.isSafe(grid, currx+rows[i], curry+cols[i], visited):
-                    visited.add((currx+rows[i], curry+cols[i]))
+                if self.isSafe(grid, currx+rows[i], curry+cols[i]):
                     queue.append((currx+rows[i], curry+cols[i]))
+                    grid[currx+rows[i]][curry+cols[i]] = '0'
     
-    def isSafe(self, grid, x, y, visited):
+    def isSafe(self, grid, x, y):
         return (
             x >= 0 and x < len(grid) and
             y >= 0 and y < len(grid[0]) and
-            grid[x][y] == '1' and (x,y) not in visited
+            grid[x][y] == '1'
         )
 
