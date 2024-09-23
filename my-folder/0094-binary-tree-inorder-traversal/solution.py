@@ -7,13 +7,21 @@
 class Solution:
     def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
         
-        if not root:
-            return []
+        res = []
+        curr = root
+        stack = []
         
-        ans = []
-        ans.extend(self.inorderTraversal(root.left))
-        ans.append(root.val)
-        ans.extend(self.inorderTraversal(root.right))
+        while stack or curr:
+            while curr:
+                stack.append(curr)
+                curr = curr.left
+
+            curr = stack.pop()
+            res.append(curr.val)
+
+            curr = curr.right
+
+        return res
+
         
-        
-        return ans
+
