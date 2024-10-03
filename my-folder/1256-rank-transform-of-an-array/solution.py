@@ -1,11 +1,18 @@
 class Solution:
     def arrayRankTransform(self, arr: List[int]) -> List[int]:
         
-        sorted_arr = list(set(arr.copy()))
-        sorted_arr.sort()
+        temp = arr.copy()
+        temp.sort()
+        hmap = {}
+        i = 1
+        for x in temp:
+            if x in hmap:
+                continue
+            hmap[x] = i
+            i += 1
         
-        rank = {}
-        for i, element in enumerate(sorted_arr):
-            rank[element] = i + 1
+        for i in range(len(arr)):
+            arr[i] = hmap[arr[i]]
         
-        return [rank[i] for i in arr]
+        return arr
+        
