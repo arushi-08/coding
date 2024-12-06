@@ -1,37 +1,21 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
         
-        # sliding window approach
-        # 2 ptr: start=0, end=0
-        # set of visited chars
-        # when we encounter a duplicate
-            # increment start till duplicate char index = start
         
+        st = 0
+        ed = 0
+        longest_substr_length = 0
+        substr_set = set()
 
-        # IMPORTANT :
-        # contracting window condn: start should not go till end
-        # start should go till 1st s[end] index + 1
-
-
-        start = 0
-        visited_chars = set()
-        max_substring_length = 0
-
-        # "abcabcbb"
-        # start=0, end=0 | max_substring_length = 1
-        # start=0, end=1 | max_substring_length = 2
-        # start=0, end=2 | max_substring_length = 3
-        # end=3, start=3 | max_substring_length = 3
-
-        # "aab"
-        for end in range(len(s)):
-
-            # contracting window
-            while s[end] in visited_chars and start < end:
-                visited_chars.remove(s[start])
-                start += 1
+        while ed < len(s):
             
-            visited_chars.add(s[end])
-            max_substring_length = max(max_substring_length, end - start + 1)
+            while st <= ed and s[ed] in substr_set:
+                substr_set.remove(s[st])
+                st += 1
+            
+            substr_set.add(s[ed])
+            longest_substr_length = max(longest_substr_length, ed - st + 1)
+            ed += 1
+        
+        return longest_substr_length
 
-        return max_substring_length
