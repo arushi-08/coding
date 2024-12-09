@@ -1,22 +1,20 @@
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-        
+        # return all triplets
+        # nums[i], nums[j], nums[k]
         ans = set()
         dup = set()
         for i in range(len(nums)):
-            hmap = {}
             if nums[i] in dup:
                 continue
             dup.add(nums[i])
+            hmap = {}
             for j in range(i+1, len(nums)):
-                term = -(nums[i] + nums[j])
-                if term in hmap:
-                    ans.add(tuple(sorted([hmap[term], nums[i], nums[j]])))
+                if nums[j] in hmap and nums[i] + hmap[nums[j]] + nums[j] == 0:
+                    ans.add(tuple(sorted([nums[i], hmap[nums[j]], nums[j]])))
                 
-                hmap[nums[j]] = nums[j]
+                hmap[-(nums[i] + nums[j])] = nums[j]
         
-        res = []
-        for i in ans:
-            res.append(list(i))
-        
-        return res
+        return list(ans)
+                
+
