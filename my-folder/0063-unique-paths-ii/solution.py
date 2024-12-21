@@ -11,16 +11,12 @@ class Solution:
                 
                 if obstacleGrid[i][j] == 1:
                     pass
-
-                elif i < 0 and j < 0:
-                    pass
                 
                 elif i == 0 and j == 0:
                     dp[i][j] = 1
                 
                 else:
                     dp[i][j] = dp[i-1][j] + dp[i][j-1]
-
                 
         return dp[m-1][n-1]
 
