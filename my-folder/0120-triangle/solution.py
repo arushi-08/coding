@@ -1,26 +1,26 @@
 class Solution:
-    
-    def __init__(self):
-        self.memo = {}
-        
     def minimumTotal(self, triangle: List[List[int]]) -> int:
         
-        if not triangle : return 0
-        if len(triangle) == 1 : return triangle[0][0]
-        
-        return self.helper(triangle, 0, 0)
-    
-    def helper(self, triangle, idx, root):
-        
-        if len(triangle) == idx: return 0
-        
-        if (idx, root) in self.memo:
-            return self.memo[(idx, root)]
-        
-        if len(triangle[idx]) > root + 1:
-            self.memo[(idx, root)] = min(self.helper(triangle, idx+1, root) + triangle[idx][root], 
-                       self.helper(triangle, idx+1, root + 1) + triangle[idx][root + 1])
-        
-        else: self.memo[(idx, root)] = self.helper(triangle, idx+1, root) + triangle[idx][root]
-        
-        return self.memo[(idx, root)]
+        # index i on current row -> move to index i or index i + 1
+        # min path sum from top to bottom
+        m = len(triangle)
+        n = max([len(triangle[i]) for i in range(m)])
+
+        prev = [float('inf')] * len(triangle[0])
+
+        for i in range(m):
+            n = len(triangle[i])
+            curr = [float('inf')] * n
+            for j in range(n):
+                if i == 0 and j == 0:
+                    curr[j] = triangle[i][j]
+                elif j == 0:
+                    curr[j] = prev[j] + triangle[i][j]   
+                elif j == n-1:
+                    curr[j] = prev[j-1] + triangle[i][j]               
+                else:
+                    curr[j] = min(prev[j], prev[j-1]) + triangle[i][j]               
+            prev = curr
+
+        return min(prev)
+
