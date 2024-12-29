@@ -1,31 +1,56 @@
 class Solution:
     def isRobotBounded(self, instructions: str) -> bool:
+         
+        #  return true if there's a circle and robot always returns back to it
+
+        # GGLLGG
+        """
+         --
+        |  |
+        |  |
+         --
         
+        if odd number of L or R return true
+        # if its G
+        GGLGG
+           -
+            |
+            - -
+            LGRGLG
 
-        # robot faces north initial direction (0,0)
-        # G : go straight 1 unit
-        # L : turn left, not go left
-        # R : turn right, not go right
+        GLGLGGLGL
 
-        # key point: robot repeats instruction forever
 
-        # if robot ends in north direction and not in initial position -> false
-        # 
-        x,y = 0,0
-        dir_x, dir_y = 0,1
+                -
+               | |
+               |
+                -
 
+
+                |
+                 -
+                 L
+                 (3,-4)
+                 (4, 5)
+        """
+
+        l_steps = instructions.count('L')
+        r_steps = instructions.count('R')
+
+        if not l_steps and not r_steps:
+            return False
+        
+        x,y = 0, 0
+        dx, dy = 0, 1
         for i in range(len(instructions)):
             if instructions[i] == 'G':
-                x += dir_x
-                y += dir_y
-                
+                x += dx
+                y += dy
             elif instructions[i] == 'L':
-                dir_y, dir_x = dir_x, -1*dir_y 
-                
+                dx, dy = -dy, dx
             elif instructions[i] == 'R':
-                dir_x, dir_y = dir_y, -1*dir_x
-            
-        # print(x,y, dir_x, dir_y) 
-        return [x,y] == [0,0] or [dir_x, dir_y] != [0,1] # VVV IMP condition
-        
+                dx, dy = dy, -dx
+        # print(x,y, curr_dir)
+        return [x,y] == [0,0] or [dx,dy]!=[0,1]
 
+        
