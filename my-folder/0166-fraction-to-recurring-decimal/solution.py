@@ -1,44 +1,43 @@
 class Solution:
     def fractionToDecimal(self, numerator: int, denominator: int) -> str:
-        # return fraction in string format
-
-        # 0.012012012012
-        # 0.011101110111 -> 0- 1-6
-        # 0.011111111111
-
-        if numerator % denominator == 0:
-            return str(numerator // denominator)
-
+        
+        if numerator== 0: return "0"
+        if numerator%denominator == 0: return str(numerator//denominator)
         neg = False
-        if numerator * denominator < 0:
-            neg = True
+            
+        if numerator < 0 or denominator < 0:
+            if not (numerator < 0 and denominator < 0):
+                neg = True
             numerator = abs(numerator)
             denominator = abs(denominator)
-
-        ans = str(numerator // denominator) + '.'
         
-        numerator_quotient = []
-        while True:
-            remainder = numerator % denominator
-            if remainder == 0:
-                for n, q in numerator_quotient:
-                    ans += str(q)
-                break
-            numerator = remainder * 10
-            quotient = numerator // denominator
+        ans = str(numerator//denominator) + '.'
+        count = len(ans)-1
+
+        dividend = numerator
+        divisor = denominator
+        visited = {}
+
+        while dividend:
+            quotient, remainder = divmod(dividend, divisor)
+            if visited:
+                ans += str(quotient)
+                count += 1
+                if dividend in visited and visited[dividend]>1:
+                    idx = visited[dividend]
+                    prefix = ''
+                    if neg:
+                        prefix = '-'
+                    return prefix + ans[:idx] + '(' + ans[idx:-1] + ')'
             
-            if [numerator, quotient] in numerator_quotient:
-                for n, q in numerator_quotient:
-                    if [n,q] == [numerator, quotient]:
-                        ans += '('
-                    ans += str(q)
-                ans += ')'
+            visited[dividend] = count
+            
+            if remainder == 0:
                 break
-            else:
-                numerator_quotient.append([numerator, quotient])
-        
-        if neg:
-            return '-' + ans
-        return ans
+            if remainder < divisor:
+                dividend = remainder * 10
 
+        if neg:
+            return '-'+ans
+        return ans
 
