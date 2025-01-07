@@ -1,43 +1,51 @@
 class Solution:
     def fractionToDecimal(self, numerator: int, denominator: int) -> str:
         
-        if numerator== 0: return "0"
-        if numerator%denominator == 0: return str(numerator//denominator)
-        neg = False
-            
-        if numerator < 0 or denominator < 0:
-            if not (numerator < 0 and denominator < 0):
-                neg = True
-            numerator = abs(numerator)
-            denominator = abs(denominator)
         
-        ans = str(numerator//denominator) + '.'
-        count = len(ans)-1
+        # numerator -> dividend
+        # denominator -> divisor
+        if numerator % denominator == 0:
+            return str(numerator//denominator)
 
-        dividend = numerator
-        divisor = denominator
-        visited = {}
+        neg_sign = False
+        if numerator < 0 and denominator < 0:
+            pass
+        elif numerator < 0 or denominator < 0:
+            neg_sign = True
+        
+        dividend = abs(numerator)
+        divisor = abs(denominator)
+
+        # 4 / 333
+        # 0.012
+        # 400 -> 670 -> 4 -> 40
+
+        ans = str(dividend//divisor) + '.'
+        quotient, remainder = divmod(dividend, divisor)
+        dividend = remainder * 10
+        quotient_repeat_map = {}
+        ans_idx = len(ans)
 
         while dividend:
             quotient, remainder = divmod(dividend, divisor)
-            if visited:
-                ans += str(quotient)
-                count += 1
-                if dividend in visited and visited[dividend]>1:
-                    idx = visited[dividend]
-                    prefix = ''
-                    if neg:
-                        prefix = '-'
-                    return prefix + ans[:idx] + '(' + ans[idx:-1] + ')'
-            
-            visited[dividend] = count
-            
             if remainder == 0:
-                break
-            if remainder < divisor:
-                dividend = remainder * 10
+                ans += str(quotient)
+                if neg_sign:
+                    return '-' + ans
+                return ans
+            
+            if (quotient, remainder) in quotient_repeat_map:
+                idx = quotient_repeat_map[(quotient, remainder)]
+                ans = ans[:idx] + '(' + ans[idx:] + ')'
+                if neg_sign:
+                    return '-' + ans
+                return ans
+            
+            ans += str(quotient)
+            dividend = remainder * 10
+            quotient_repeat_map[(quotient, remainder)] = ans_idx
+            ans_idx += 1
 
-        if neg:
-            return '-'+ans
-        return ans
+        
+
 
