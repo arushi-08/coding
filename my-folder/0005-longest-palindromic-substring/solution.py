@@ -1,18 +1,29 @@
 class Solution:
     def longestPalindrome(self, s: str) -> str:
         
+        # longest pal substring
+        longest_substr = ''
+        for i in range(len(s)-1):
+            substr1 = self.check_pal(s, i, i)
+            substr2 = self.check_pal(s, i, i+1)
+            if len(longest_substr) < len(substr1):
+                longest_substr = substr1
+            if len(longest_substr) < len(substr2):
+                longest_substr = substr2
         
-        dp = [[''] * len(s) for _ in range(len(s))]
-        longest_pal_string = s[0]
-        
-        for i in range(len(s)-1,-1,-1):
-            for j in range(i, len(s)):
-                if i == j:
-                    dp[i][j] = s[i]
-                    continue
-                
-                if s[i] == s[j] and (dp[i+1][j-1] or dp[i+1][j] == dp[i][j-1] != ''):
-                    dp[i][j] = s[i] + dp[i+1][j-1] + s[j]
-                    longest_pal_string = max(longest_pal_string, dp[i][j], key=len)
+        if not longest_substr:
+            return s
+        return longest_substr
+    
+    def check_pal(self, s, st, ed):
+        # cbabd
+        if s[st] != s[ed]: return ''
 
-        return longest_pal_string
+        while st >= 0 and ed < len(s):
+            if s[st] == s[ed]:
+                st -= 1
+                ed += 1
+            else:
+                break
+        
+        return s[st+1:ed]
