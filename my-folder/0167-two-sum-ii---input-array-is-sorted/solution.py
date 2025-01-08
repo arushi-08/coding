@@ -1,13 +1,20 @@
 class Solution:
     def twoSum(self, numbers: List[int], target: int) -> List[int]:
         
-        hmap = {}
-        for i in range(len(numbers)):
-            if numbers[i] in hmap:
-                return [hmap[numbers[i]]+1, i+1]
-            hmap[target-numbers[i]] = i
-        
-        return -1
 
+        # 2 pointer
 
+        st = 0
+        ed = len(numbers)-1
 
+        while st < ed:
+            add = numbers[st] + numbers[ed]
+            if add == target:
+                return [st+1, ed+1]
+
+            if add < target:
+                st += 1
+            else:
+                ed -= 1
+
+        return  
