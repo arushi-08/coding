@@ -1,89 +1,63 @@
-
-from threading import Lock
-
-
 class Node:
-    def __init__(self, key=0, val=0, prev=None, next=None) -> None:
+    def __init__(self, key=0, val=0):
         self.key = key
         self.val = val
-        self.prev = prev
-        self.next = next
-        
-class LRUCache: 
-    '''
-    self.hmap:
-        {key: Node(key, val, next, prev)}
-    '''
-    def __init__(self, capacity) -> None:
-        if capacity < 0:
-            raise ValueError('Capacity must be positive')
+        self.next = None
+        self.prev = None
+
+class LRUCache:
+
+    def __init__(self, capacity: int):
         self.capacity = capacity
-        self.hmap = {}
-        self.head = Node()
-        self.tail = Node()
+        self.cache = {} # key, value
+        self.head = Node(-1)
+        self.tail = Node(-1)
         self.head.next = self.tail
         self.tail.prev = self.head
-        self.lock = Lock()
 
+    def get(self, key: int) -> int:
+        # hashmap -> o(1)
+        if key in self.cache:
+            node = self.cache[key]
+            self._remove(node)
+            self._add_to_top(node)
+            return node.val
+        return -1
+ 
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            node = self.cache[key]
+            node.val = value
+            self._remove(node)
+            self._add_to_top(node)
+            return
 
-    def get(self, key):
-        with self.lock:
-            if key in self.hmap:
-                self._move_to_head(self.hmap[key])
-                return self.hmap[key].val
-            
-            return -1
+        if len(self.cache) == self.capacity:
+            lru = self.tail.prev
+            if lru == self.head:
+                return
+            del self.cache[lru.key]
+            self._remove(lru)
 
+        self.cache[key] = Node(key, value)
+        self._add_to_top(self.cache[key])
 
-    def put(self, key, value):
-        with self.lock:
-            if key in self.hmap:
-                node = self.hmap[key]
-                self._move_to_head(node)
-                if value != node.val:
-                    self.hmap[key].val = value
-                    self.head.val = value
-            else:
-                if len(self.hmap) == self.capacity:
-                    tail = self._pop_tail()
-                    del self.hmap[tail.key]
-                node = Node(key=key, val=value, next=self.head)
-                self.hmap[key] = node
-                self._add_head(node)
-
-
-    def _move_to_head(self, node):
-        self._remove_node(node)
-        self._add_head(node)
-        
-
-    def _remove_node(self, node):
-        prev_node = node.prev
+    def _remove(self, node):
         next_node = node.next
-        prev_node.next = next_node
-        next_node.prev = prev_node
+        node.prev.next = next_node
+        next_node.prev = node.prev
     
-
-    def _pop_tail(self):
-        '''
-        remove node before dummy tail
-        '''
-        node = self.tail.prev
-        if node == self.head:
-            return None
-        self._remove_node(node)
-        return node
-
-
-    def _add_head(self, node):
-        '''
-        add a node after dummy head
-        '''
-        node.prev = self.head
-        node.next = self.head.next
-        self.head.next.prev = node
+    def _add_to_top(self, node):
+        head_next = self.head.next
         self.head.next = node
-        
+        node.prev = self.head
+        node.next = head_next
+        head_next.prev = node
+
+
+
+
+
 
 
 # Your LRUCache object will be instantiated and called as such:
