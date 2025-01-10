@@ -1,14 +1,20 @@
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
         
-        # iterate on strs
-        # store items in hmap, indexed by the tuple(sorted(strs))
-        # return hmap.values
+        #  given a string -> group anagrams together
+        # same set of chars
 
-        hmap = defaultdict(list)
+        # sorting hmap time - o(nklogk)
+        # space - o(nk)
+        # 
+        # char count hmap time - o(nk)
+        anagram_dict = defaultdict(list)
+        for i in range(len(strs)): # o(n)
+            char_count = [0]*26
+            for j in range(len(strs[i])):
+                char_count[ord('a') - ord(strs[i][j])] += 1
+            anagram_dict[tuple(char_count)].append(strs[i]) 
 
-        for i in range(len(strs)):
-            hmap[tuple(sorted(strs[i]))].append(strs[i])
-        
-        return list(hmap.values())
+        return list(anagram_dict.values())
 
+        # char count - a1b2
