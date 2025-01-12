@@ -1,22 +1,16 @@
 class Solution:
     def reachingPoints(self, sx: int, sy: int, tx: int, ty: int) -> bool:
         
-        if sx > tx or sy > ty: return False
-
-        
-        # tx < ty
-        while tx >= sx and ty >= sy:
-            if sx == tx and sy == ty: return True
-
-            if tx < ty:
-                if tx > sx:
-                    ty %= tx
-                else:
-                    return (ty-sy)%tx == 0 
+        while sx < tx and sy < ty:
+            if tx > ty:
+                tx %= ty
             else:
-                if ty > sx:
-                    tx %= ty
-                else:
-                    return (tx-sx)%ty == 0
+                ty %= tx
+        
+        if tx == sx and ty >= sy and (ty - sy) % sx == 0:
+            return True
+        if ty == sy and tx >= sx and (tx - sx) % sy == 0:
+            return True
         
         return False
+
