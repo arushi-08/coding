@@ -1,6 +1,8 @@
 class Solution:
     def trap(self, height: List[int]) -> int:
-        
+        # 2 pointers:
+        # shift the minimum towards the arr
+        # ans += max_ptr - height[ptr]
         left = 0
         right = len(height)-1
         left_max = 0
