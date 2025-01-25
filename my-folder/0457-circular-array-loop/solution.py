@@ -1,65 +1,70 @@
 class Solution:
     def circularArrayLoop(self, nums: List[int]) -> bool:
         
-        # circular arr
-        # find cycle in arr
+        # circular array
+        # nums[i] + -> move forward
+        # nums[i] - -> move backward
 
-        # slow and fast pointer?
+        # return true if there's a cycle in nums
+        # else false
 
-        # [2,-1,1,2,2]
+        #       2,-1,1,2,2 -> 
+        #    0
+        # idx = 2
+        #          0
+        #            3
+        #              0
+        #                1
 
-        # start at 0
-        # 2 steps forward -> idx 2
-        # 1 step f -> idx 3
-        # 2 step f -> idx 5 % 5 = 0 -> cycle
+        # does this relate to josephus problem?
+        # try doing with fast_ptr and slow_ptr approach
+        if not nums: return False
 
-        # 0 2 3 0
-        # slow = 0, fast = 0
-        # 2, 3
-        # 3, 2
-        # 0, 0
+        def next_index(ptr):
+            return (ptr + nums[ptr]) % n
 
-        def move_ptrs(slow, fast):
-            visited_idx.add(slow)
-            visited_idx.add(fast)
-
-            slow = (len(nums) + nums[slow] + slow) % n
-            fast = (len(nums) + nums[fast] + fast) % n
-            if nums[slow] * nums[fast] < 0:
-                return -1, -1
-            fast = (len(nums) + nums[fast] + fast) % n
-            if nums[slow] * nums[fast] < 0:
-                return -1, -1
-            return slow, fast
-           
         n = len(nums)
-        
-        visited_idx = set()
-        
+
         for i in range(n):
-            if i in visited_idx:
+
+            if nums[i] == 0:
                 continue
 
-            slow = i
             fast = i
-            
-            while nums[slow] * nums[fast] > 0:
+            slow = i
+            direction = nums[i] > 0
+
+            while True:
                 
-                inside = True
-                slow, fast = move_ptrs(slow, fast)
-                if slow == -1: 
+                next_slow = next_index(slow)
+                if nums[next_slow] == 0 or (nums[next_slow] > 0) != direction:
+                    break
+                slow = next_slow
+
+                next_fast = next_index(fast)
+                if nums[next_fast] == 0 or (nums[next_fast] > 0) != direction:
+                    break
+                fast = next_index(next_fast)
+                if nums[fast] == 0 or (nums[fast] > 0) != direction:
                     break
 
                 if slow == fast:
-                    slow, fast = move_ptrs(slow, fast)
-                    if slow == -1 or slow == fast:
+                    if slow == next_index(slow):
                         break
-                    else:
-                        return True
+                    return True
 
+            marker = i
+            while nums[marker] != 0 and nums[marker] > 0 == direction:
+                next_marker = next_index(marker)
+                nums[marker] = 0
+                marker = next_marker
+            
         return False
 
+        #   -2,1,-1,-2,-2
+        # 0
+        #   
 
-
+            
 
 
