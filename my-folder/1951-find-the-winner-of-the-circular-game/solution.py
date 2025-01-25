@@ -1,41 +1,34 @@
 class Solution:
-    def findTheWinner(self, n_friends: int, k: int) -> int:
-        # moving clockwise from ith friend to i+1th friend
-        # 1 <= i < n
-        # start at 1st friend
-        # count the next k friends in clockwise direction including the friend you started at
-        # last friend you counted leaves the circle and loses the game
-        # if there's still more than one friend in circle, go back to step 2 starting from friend immediately clockwise
+    def findTheWinner(self, n: int, k: int) -> int:
         
-        # while n_friends:
-        # go from 1 to n_friends
-        # kth person = 0
-        
-        # linear time and constant space
-        # right now
-        # loop: n_friends * n_friends
-        # 2, 4, (5+1), (5+5)
-        
-        if n_friends == 1: return 1
-        
-        hop = 0
-        j = 0
-        friends_list = [1] * n_friends
-        n = n_friends
-        while n_friends:
-            if friends_list[j%n] == 1:
-                hop += 1
+        # find winner i.e., 1 person that's left
+        # sitting in circle
+        # numbered 1 to n - clockwise order
+        # i to i+1
+        # count next k friends including curr friend
+        # the last friend you counted leaves the circle 
+        # loses the game
 
-            if hop == k:
-                n_friends -= 1
-                hop = 0
-                # print('j%n',j%n, friends_list)
-                friends_list[j%n] = 0
-                if n_friends == 1:
+        i = 0
+        friends = [1] * n
+        flen = n
+        last_idx = 0
+
+        while n > 1:
+            f_count = 0
+            for j in range(i, i+flen*k):
+                j = j % flen
+                if friends[j]:
+                    f_count += 1
+                if f_count == k:
+                    friends[j] = 0
+                    last_idx = j
                     break
             
-            j += 1
-        
-        return friends_list.index(1) + 1
-            
-            
+            i = last_idx
+            n -= 1
+
+        for i, fred in enumerate(friends):
+            if fred:
+                return i+1
+
