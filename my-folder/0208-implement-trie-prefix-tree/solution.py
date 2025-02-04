@@ -2,32 +2,32 @@ class Trie:
 
     def __init__(self):
         self.trie = {}
+        
 
     def insert(self, word: str) -> None:
-        curr = self.trie
-        for i, char in enumerate(word):
-            if char not in curr:
-                curr[char] = {}
-            curr = curr[char]
-        curr[True] = True
-            
+        trie = self.trie
+        for ch in word:
+            if ch not in trie:
+                trie[ch] = {}
+            trie = trie[ch]
+        trie['#'] = '#'
+
 
     def search(self, word: str) -> bool:
-        curr = self.trie
-        for char in word:
-            if char not in curr:
-                return False
-            curr = curr[char]
-        
-        return True in curr
+        _, ans = self.search_helper(word)
+        return ans
+
+    def search_helper(self, word):
+        trie = self.trie
+        for ch in word:
+            if ch not in trie:
+                return False, False
+            trie = trie[ch]
+        return True, '#' in trie
 
     def startsWith(self, prefix: str) -> bool:
-        curr= self.trie
-        for char in prefix:
-            if char not in curr:
-                return False
-            curr = curr[char]
-        return True
+        ans, _ = self.search_helper(prefix)
+        return ans
 
 
 # Your Trie object will be instantiated and called as such:
