@@ -5,7 +5,7 @@ class Trie:
     def __init__(self):
         self.trie = {}
     
-    def insert(self, word):
+    def insert(self, word): # O(S)
         trie = self.trie
         for ch in word:
             if ch not in trie:
@@ -13,7 +13,7 @@ class Trie:
             trie = trie[ch]
         trie['#'] = '#'
     
-    def starts_with(self, word):
+    def starts_with(self, word): # O(S)
         trie = self.trie
         for ch in word:
             if ch not in trie:
@@ -22,7 +22,7 @@ class Trie:
 
         return trie
     
-    def get_sentences(self, trie, prefix):
+    def get_sentences(self, trie, prefix): # O(S+N)
         sentences = []
 
         def dfs(trie, sentences, word):
@@ -41,7 +41,8 @@ class Trie:
         return sentences
 
 class AutocompleteSystem:
-
+    # O(N*S + NlogN)
+    
     def __init__(self, sentences: List[str], times: List[int]):
         # store the sentences in a trie
         # when i find a '#' in trie that's a sentence
@@ -50,13 +51,13 @@ class AutocompleteSystem:
         # return the top 3 based on ascii sorting
         self.trie = Trie()
         self.sentence_to_degree = {}
-        for sentence, hot_degree in zip(sentences, times):
+        for sentence, hot_degree in zip(sentences, times): # O(N*S)
             self.trie.insert(sentence)
             self.sentence_to_degree[sentence] = hot_degree
 
         self.input_search = ''
 
-    def input(self, c: str) -> List[str]:
+    def input(self, c: str) -> List[str]: # O(N+S+NlogN)
         
         if c == '#' : 
             self.trie.insert(self.input_search)
