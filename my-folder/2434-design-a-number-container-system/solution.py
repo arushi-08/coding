@@ -1,31 +1,27 @@
-from heapq import heappush, heappop
-from collections import defaultdict
 class NumberContainers:
 
     def __init__(self):
-        self.system = defaultdict(int)
-        self.system_heap = {}
+        self.idx_to_num = {}
+        self.num_to_idx = defaultdict(list)
 
     def change(self, index: int, number: int) -> None:
-    
-        self.system[index] = number
-        if number not in self.system_heap:
-            self.system_heap[number] = []
-        heappush(self.system_heap[number], index)
-        
-        
+        self.idx_to_num[index] = number
+        heappush(self.num_to_idx[number], index)
+            
+
     def find(self, number: int) -> int:
-        
-        if number not in self.system_heap:
+        if not self.num_to_idx[number]:
             return -1
-        
-        while self.system_heap[number]:
-            if self.system[self.system_heap[number][0]] != number: # keypoint: pop only those indices that don't point to number
-                heappop(self.system_heap[number])
-            else:
-                return self.system_heap[number][0]
-        
-        return -1
+
+        while self.num_to_idx[number] and self.idx_to_num[
+            self.num_to_idx[number][0]
+            ] != number:
+            heappop(self.num_to_idx[number])
+       
+        if not self.num_to_idx[number]:
+            return -1
+
+        return self.num_to_idx[number][0]
 
 
 # Your NumberContainers object will be instantiated and called as such:
