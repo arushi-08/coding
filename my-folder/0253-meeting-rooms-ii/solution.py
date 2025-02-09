@@ -1,16 +1,22 @@
 class Solution:
     def minMeetingRooms(self, intervals: List[List[int]]) -> int:
         
-        intervals.sort(key=lambda x: x[0])
+        # given meeting arr where intervals[i] = [starti, endi]
+        # return min num of conference rooms 
 
-        end_time_heap = []
-        heappush(end_time_heap, intervals[0][1])
-
+        intervals.sort()
+        booked_room_endtimes = []
+        heappush(booked_room_endtimes, intervals[0][1])
+        
         for i in range(1, len(intervals)):
 
-            if intervals[i][0] >= end_time_heap[0]:
-                heappop(end_time_heap)
+            start_x, end_x = intervals[i]
+            if start_x >= booked_room_endtimes[0]:
+                heappop(booked_room_endtimes)
+
+            heappush(booked_room_endtimes, end_x)
             
-            heappush(end_time_heap, intervals[i][1])
         
-        return len(end_time_heap)
+        return len(booked_room_endtimes)
+            
+
