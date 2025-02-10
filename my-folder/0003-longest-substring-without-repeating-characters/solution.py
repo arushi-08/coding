@@ -1,21 +1,21 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
         
-        
-        st = 0
-        ed = 0
-        longest_substr_length = 0
-        substr_set = set()
+        # sliding window?
 
-        while ed < len(s):
+        subset_map = {}
+        start = 0
+        maxlen = 0
+
+        for end in range(len(s)):
+            while start < end and s[end] in subset_map:
+                subset_map[s[start]] -= 1
+                if subset_map[s[start]] == 0:
+                    del subset_map[s[start]]
+                start += 1
             
-            while st <= ed and s[ed] in substr_set:
-                substr_set.remove(s[st])
-                st += 1
-            
-            substr_set.add(s[ed])
-            longest_substr_length = max(longest_substr_length, ed - st + 1)
-            ed += 1
+            subset_map[s[end]] = subset_map.get(s[end], 0) + 1
+            maxlen = max(maxlen, end - start + 1)
         
-        return longest_substr_length
+        return maxlen
 
