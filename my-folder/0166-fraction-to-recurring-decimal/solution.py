@@ -1,51 +1,54 @@
 class Solution:
     def fractionToDecimal(self, numerator: int, denominator: int) -> str:
         
-        
-        # numerator -> dividend
-        # denominator -> divisor
-        if numerator % denominator == 0:
-            return str(numerator//denominator)
+        # -> str:
+        # decimal
 
+        # 333 | 4   | 0
+        #       0
+        #       40  | 0.0
+        #       0
+        #       400  | 0.01
+        #       333
+        #        670 | 0.01
+        #      
+        
         neg_sign = False
-        if numerator < 0 and denominator < 0:
-            pass
-        elif numerator < 0 or denominator < 0:
+        if numerator * denominator < 0:
             neg_sign = True
+            numerator = abs(numerator)
+            denominator = abs(denominator)
+
+        ans = str(numerator // denominator)
+        if numerator % denominator == 0:
+            if neg_sign:
+                return '-'+ans
+            return ans
         
-        dividend = abs(numerator)
-        divisor = abs(denominator)
-
-        # 4 / 333
-        # 0.012
-        # 400 -> 670 -> 4 -> 40
-
-        ans = str(dividend//divisor) + '.'
-        quotient, remainder = divmod(dividend, divisor)
-        dividend = remainder * 10
-        quotient_repeat_map = {}
-        ans_idx = len(ans)
-
-        while dividend:
-            quotient, remainder = divmod(dividend, divisor)
-            if remainder == 0:
-                ans += str(quotient)
-                if neg_sign:
-                    return '-' + ans
-                return ans
-            
-            if (quotient, remainder) in quotient_repeat_map:
-                idx = quotient_repeat_map[(quotient, remainder)]
-                ans = ans[:idx] + '(' + ans[idx:] + ')'
-                if neg_sign:
-                    return '-' + ans
-                return ans
-            
-            ans += str(quotient)
-            dividend = remainder * 10
-            quotient_repeat_map[(quotient, remainder)] = ans_idx
-            ans_idx += 1
-
+        ans += '.'
         
+        remainder = numerator % denominator
+        seen = {}
+
+        while remainder:
+            numerator = remainder * 10
+            remainder = numerator % denominator
+            quotient = str(numerator // denominator)
+            key = (quotient, remainder)
+
+            if key in seen:
+                result = ans[:seen[key]] + '(' + ans[seen[key]:] + ')'
+                if neg_sign:
+                    return '-'+result
+                return result
+            
+            seen[(quotient, remainder)] = len(ans)
+            ans += quotient
+
+        if neg_sign:
+            return '-'+ans
+        return ans
+
+
 
 
