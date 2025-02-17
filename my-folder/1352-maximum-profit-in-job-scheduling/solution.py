@@ -1,32 +1,45 @@
-import bisect
-
 class Solution:
-    def jobScheduling(self, startTime: List[int], endTime: List[int], profit: List[int]) -> int:
+    def jobScheduling(self, starttime: List[int], endtime: List[int], profit: List[int]) -> int:
         
-        # return max profit such that no 2 jobs are overlapping
-        # dp
+        # find the last non-conflicting job with current job
+        jobs = [(start, end, p) for start, end, p in zip(starttime, endtime, profit)]
 
-        job_times = [[st, ed, p] for st, ed, p in zip(startTime, endTime, profit)]
-        job_times.sort(key=lambda x:x[0])
+        jobs.sort(key = lambda x: x[1])
+        self.memo = {}
 
-        starts = [j[0] for j in job_times]
-        ends = [j[1] for j in job_times]
+        return self.maxProfitJobs(jobs, len(jobs)-1)
+    
+    def maxProfitJobs(self, jobs, n):
 
-        next_index = []
-        for end in ends:
-            j = bisect.bisect_left(starts, end)
-            next_index.append(j)
-
-        n = len(job_times)
-        dp = [0] * (n+1)
-
-        for i in range(n-1,-1,-1):
-
-            take_profit = dp[next_index[i]] + job_times[i][2]
-            skip_profit = dp[i+1]
-            dp[i] = max(take_profit, skip_profit) 
+        if n < 0:
+            return 0
         
-        return dp[0]
+        if n == 0:
+            return jobs[n][2]
+        
+        if n in self.memo:
+            return self.memo[n]
+        
+        i = self.findLastNonConflictJob(jobs, n)
+        # print(i,n)
+        include = self.maxProfitJobs(jobs, i) + jobs[n][2]
+        exclude = self.maxProfitJobs(jobs, n-1)
 
+        self.memo[n] = max(include, exclude)
+        return self.memo[n]
+    
+    def findLastNonConflictJob(self, jobs, n):
+        
+        start = 0
+        end = n-1
+        ans = -1
+        while start <= end:
+            mid = (start + end)//2
+            if jobs[mid][1] <= jobs[n][0]:
+                ans = mid
+                start = mid + 1
+            else:
+                end = mid - 1
 
+        return ans
 
