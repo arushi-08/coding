@@ -1,21 +1,26 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
         
-        # sliding window?
+        # given string s, find length of longest substring without duplicate chars
 
-        subset_map = {}
+        # s = 'abcabcbb'
+        # find length of longest substring without dups
+
         start = 0
-        maxlen = 0
+        end = 0
+        currset = set()
+        maxlength = 0
 
-        for end in range(len(s)):
-            while start < end and s[end] in subset_map:
-                subset_map[s[start]] -= 1
-                if subset_map[s[start]] == 0:
-                    del subset_map[s[start]]
+        while end < len(s):
+            # abcabcbb
+            while start < end and s[end] in currset:
+                currset.remove(s[start])
                 start += 1
             
-            subset_map[s[end]] = subset_map.get(s[end], 0) + 1
-            maxlen = max(maxlen, end - start + 1)
+            currset.add(s[end])
+            maxlength = max(maxlength, end - start + 1)
+            end += 1
         
-        return maxlen
+        return maxlength
+
 
