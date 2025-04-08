@@ -1,20 +1,23 @@
 class Solution:
     def canJump(self, nums: List[int]) -> bool:
         
-        if len(nums) == 1:
-            return True
-        if nums.count(0) == 0:
-            return True
+        # return true if can reach last index
+        # else return false
 
-        max_jump = nums[0]
-        for i in range(len(nums)):
-            
-            if max_jump < i:
-                return False
+        # [2,3,1,1,4]
 
-            max_jump = max(max_jump, i + nums[i])
-            # print('max_jump', max_jump)
-            if max_jump >= len(nums):
-                return True
-        
-        return True
+        # at each position take +pos[i]
+        if len(nums) == 1: return True
+
+        n = len(nums)
+        goal = len(nums)-1
+
+        for j in range(len(nums)-1,-1,-1):
+            if nums[j] + j >= goal:
+                goal = j
+
+        return goal == 0
+
+        # j=0
+        # i=1 to 1 - no enter
+        # 
