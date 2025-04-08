@@ -1,17 +1,30 @@
 class Solution:
     def canReach(self, arr: List[int], start: int) -> bool:
         
-        # initially at start
-        # when at index i, can jump to i + arr[i] or i - arr[i]
-        # check if i can reach any index with value 0
+        # given array of non-negative integers arr
+        # initially positioned at start index
+        # jumps = i+arr[i], i-arr[i]
+        # reach index val 0
 
-        # 2 options
-        if start >= len(arr) or start < 0 or arr[start] < 0:
-            return False
 
-        if arr[start] == 0:
-            return True
+        # graph?
+        if arr[start] == 0: return True
+        if len(arr) == 1: return False
+
+        queue = deque()
+        queue.append(start)
+        visited = set()
+        while queue:
+            curr = queue.popleft()
+            if arr[curr] == 0:
+                return True
+
+            for next_idx in [curr + arr[curr], curr - arr[curr]]:
+                if 0 <= next_idx < len(arr):
+                    if next_idx not in visited:
+                        queue.append(next_idx)
+                        visited.add(next_idx)
         
-        arr[start] *= -1
-        
-        return self.canReach(arr, start + arr[start]) or self.canReach(arr, start - arr[start])
+        return False
+
+            
