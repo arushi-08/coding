@@ -1,34 +1,47 @@
-from heapq import heappush
-from collections import Counter
 class Solution:
     def reorganizeString(self, s: str) -> str:
-        # heap
+        """
+        goal: put most frequent char first such that same chars are not adjacent
+
+        cannot do all k's then repeat vvvlo ['v', 'l', 'o', 'v'], expected vlvov
+        cannot do k every consecutive aabbcc, output: ababc_ cannot do it, expected abcabc
+        what did i do before?
+        put k every consecutive but don't restart the start pointer => abacbc
+        abc
         
-        freq_dict = Counter(s) # O(N)
-        heap = []
-        # O(NlogN)
-        for key, val in freq_dict.items(): # O(N)
-            heappush(heap, (-val, key)) # O(logN)
-        
-        ans = ""
-        
-        # O(NlogN)
-        while heap: # O(N)
-            insert_back = []
-            for i in range(2):
-                if heap:
-                    freq, char = heappop(heap) # O(logN)
-                    if ans:
-                        if ans[-1] == char:
-                            return ""
-                    ans += char
-                    freq = -freq - 1
-                    if freq > 0:
-                        insert_back.append((-freq, char))
-                    
-            for element in insert_back:
-                heappush(heap, element) # O(logN)
-        
-        return ans
-        
-        
+        """
+
+        s_list = list(s)
+        s_map = Counter(s_list)
+
+        heap = [(-v,k) for k, v in s_map.items()]
+        heapify(heap)
+
+        res = []
+        prev = None
+        while heap:
+            
+            maxval, most_freq_char = heappop(heap)
+            res.append(most_freq_char)
+            maxval += 1
+
+            if prev:
+                heappush(heap, prev)
+                prev = None
+            
+            if maxval < 0:
+                prev = (maxval, most_freq_char)
+
+        if len(res) != len(s):
+            return ""
+
+        return "".join(res)
+
+# aabbcc
+# res = []
+# a:2,b:2,c:2
+# maxval=-2,most_freq=a
+# 
+# 
+
+
