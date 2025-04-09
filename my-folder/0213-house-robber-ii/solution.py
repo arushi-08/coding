@@ -1,23 +1,22 @@
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        
-        # (i + n - 1)%n
-        if len(nums)==1: return nums[0]
-        
-        return max(self.helper(nums[1:]), self.helper(nums[:-1]))
-
+        # nums is circular arr
+        # get max value from non adj idx
+        if len(nums) == 1:
+            return nums[0]
+        return max(
+            self.helper(nums[:-1]), 
+            self.helper(nums[1:])
+        )
+    
     def helper(self, nums):
 
-        if not nums: return 0
+        free = 0
+        forced = 0
 
-        if len(nums)==1: return nums[0]
-
-        prev2 = nums[0]
-        prev = max(nums[1], nums[0])
-
-        for i in range(2, len(nums)):
-            curr = max(prev, nums[i] + prev2)
-            prev2 = prev
-            prev = curr
-
-        return prev
+        for i in range(len(nums)-1,-1,-1):
+            new_forced = free
+            new_free = max(forced + nums[i], free)
+            free, forced = new_free, new_forced
+        
+        return free
