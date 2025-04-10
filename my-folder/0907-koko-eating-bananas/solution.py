@@ -1,38 +1,50 @@
 class Solution:
     def minEatingSpeed(self, piles: List[int], h: int) -> int:
         
-        # 8 hours
-        
-        k_range = range(1, max(piles)+1)
-        sum_bananas = sum(piles)
-        start = 1
-        end = max(piles)
-        while start < end:
-            piles2 = piles.copy()
-            eaten = 0
-            mid = (start + end)//2
-            # print("new mid", mid) 
-            time = 0
-            i = 0
-            
-            for i in range(len(piles2)):
-                
-                if piles2[i] > 0:
-                    if piles2[i] % mid != 0:
-                        time += piles2[i]//mid + 1
-                    else:
-                        time += piles2[i]//mid
+        # koko loves to eat bananas
+        # n piles of bananas
+        # ith pile has piles[i]
+        # guard will come in h hours
+        # koko can eat k bananas each hour
+        # if piles[i] < k, koko eats piles[i]
+        # koko eats min(piles[i], k) each hour
+        # return min k such that she can eat all 
+        # FFFTTTTT
+        # 1st k when all bananas gone
+        # 3,6,7,11
+        # if len(piles) >= h
+        # then max(piles) is k?
+        # if len(piles) < h
 
-                if time > h:
-                    break
+        if len(piles) == h:
+            return max(piles)
+
+        def can_finish(mid):
+            i = len(piles)-1
+            n_hours_till_now = 0
+            while i >= 0:
+                n_hours_curr_pile = math.ceil(piles[i]/mid)
+                n_hours_till_now += n_hours_curr_pile
+                i -= 1
                 
-            if time <= h:
-                # print("time", time,)
-                end = mid
+            
+            return n_hours_till_now <= h
+        
+        st = 1
+        ed = max(piles)
+        res = ed
+        while st<=ed:
+            mid = (st + ed)//2
+            if can_finish(mid):
+                res = mid
+                ed = mid - 1
             else:
-                start = mid + 1 # bigger k
-                
-            
-            # print("start", start, "mid", mid, "end", end)
-            
-        return start
+                st = mid + 1
+
+        return res
+        
+
+        
+
+                # returns smallest number gte?
+        # or is it FFTTT, how to interpret bisect.bisect_left() ?
