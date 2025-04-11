@@ -1,25 +1,35 @@
 class Solution:
-    def __init__(self):
-        self.memo = {}
-
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         
-        if s == '':
-            return True
+        """
+        for loop on s
+        see if s[:i] in wordDict
+        if it is, add a break point
+        # see if s[breakpoint: i] in wordDict
+        """
+
+        wordset = set(wordDict)
+        st = 0
+        self.memo = {}
         
-        if s in self.memo:
-            return self.memo[s]
-
-        for word in wordDict:
-            if s == word:
+        def helper(word):
+            if word in self.memo:
+                return self.memo[word]
+            if word in wordset:
                 return True
-            if s.startswith(word):
-                if self.wordBreak(s[len(word):], wordDict):
-                    self.memo[s] = True
+
+            st = 0
+            for i in range(1, len(word)):
+                if word[:i] in wordset and helper(word[i:]):
+                    self.memo[word] = True
                     return True
-                    
-        self.memo[s] = False
-        return False
 
+            self.memo[word] = False
+            return False
 
+        return helper(s)
+
+        # greedily putting a breakpoint
+        # we need to check if s[st:i] or another value
+        # a->a->a->a->a->a->a
 
