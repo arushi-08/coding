@@ -1,31 +1,33 @@
-from collections import defaultdict, deque
 class Solution:
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
-
-        graph = defaultdict(list)
-        indegree = [0] * numCourses
         
+        prereq_to_course_map = defaultdict(list)
+        course_to_prereq_count_map = {}
+
         for course, prereq in prerequisites:
-            graph[prereq].append(course)
-            indegree[course] += 1
-
-        queue = deque()
-        ans = []
+            prereq_to_course_map[prereq].append(course)
+            course_to_prereq_count_map[course] = course_to_prereq_count_map.get(course, 0) + 1
+        
+        res = []
         for i in range(numCourses):
-            if indegree[i] == 0:
-                queue.append(i)
-                ans.append(i)
-        nodevisited = 0
+            if i not in course_to_prereq_count_map:
+                res.append(i)
 
-        while len(queue):
-            prereq = queue.popleft()
-            nodevisited += 1
-            for course in graph[prereq]:
-                indegree[course] -= 1
-                if indegree[course]==0:
-                    queue.append(course)
-                    ans.append(course)
-        if nodevisited != numCourses: return []
-        return ans
-            
+        queue = deque(res)
+
+        while queue:
+            curr = queue.popleft()
+
+            for neigh in prereq_to_course_map[curr]:
+                course_to_prereq_count_map[neigh] -= 1
+
+                if course_to_prereq_count_map[neigh] == 0:
+
+                    res.append(neigh)
+                    queue.append(neigh)
+                    del course_to_prereq_count_map[neigh]
+        
+        if course_to_prereq_count_map == {}:
+            return res
+        return []
 
