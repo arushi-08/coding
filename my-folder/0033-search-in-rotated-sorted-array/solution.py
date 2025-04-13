@@ -1,28 +1,32 @@
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
         
-        start = 0
-        end = len(nums) - 1
-        while start <= end:
-            mid = (start + end) // 2
+        """
+        if st < mid : sorted subarr
+            check if val is in between, if it is go to left subarr
+            else go to left side
+        
+        """
+        
+        st = 0
+        ed = len(nums)-1
+        while st <= ed:
+            mid = (st + ed) // 2
+
             if nums[mid] == target:
                 return mid
-            
-            if nums[start] == target:
-                return start
-            
-            if nums[end] == target:
-                return end
-            
-            if nums[start] < nums[mid]:
-                if nums[start] < target < nums[mid]:
-                    end = mid - 1
+
+            if nums[st] <= nums[mid]:
+                if nums[st] <= target <= nums[mid]:
+                    ed = mid - 1
                 else:
-                    start = mid + 1
+                    st = mid + 1
+            
             else:
-                if nums[mid] < target < nums[end]:
-                    start = mid + 1
+                if nums[mid] <= target <= nums[ed]:
+                    st = mid + 1
                 else:
-                    end = mid - 1
+                    ed = mid - 1
         
-        return -1 
+        return -1
+
