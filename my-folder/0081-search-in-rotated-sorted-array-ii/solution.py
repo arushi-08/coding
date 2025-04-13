@@ -1,31 +1,33 @@
 class Solution:
-    def search(self, arr: List[int], target: int) -> bool:
+    def search(self, nums: List[int], target: int) -> bool:
         
-        if len(arr) == 1:
-            return arr[0] == target
-        
-        left = 0
-        right = len(arr) - 1
-        while left <= right:
-            
-            while left < right and arr[left] == arr[left + 1]:
-                left += 1
-            while left < right and arr[right] == arr[right - 1]:
-                right -= 1
-            
-            mid = (left + right) // 2
-            if arr[mid] == target:
+        st = 0
+        ed = len(nums)-1
+
+        while st <= ed:
+            mid = (st + ed) // 2
+
+            if target in (nums[st], nums[mid], nums[ed]):
                 return True
-            
-            if arr[left] <= arr[mid]:
-                if arr[left] <= target < arr[mid]:
-                    right = mid - 1
+            # print('mid', mid, 'st', st, 'ed', ed)
+
+            if nums[st] == nums[mid] and nums[mid] == nums[ed]:
+                st += 1
+                ed -= 1
+                continue
+            # 1,1,1,2,1,1,1,1,1
+            if nums[st] <= nums[mid]:
+                if nums[st] <= target < nums[mid]:
+                    ed = mid - 1
                 else:
-                    left = mid + 1
+                    st = mid + 1
             else:
-                if arr[mid] < target <= arr[right]:
-                    left = mid + 1
+                if nums[mid] < target <= nums[ed]:
+                    st = mid + 1
                 else:
-                    right = mid - 1
+                    ed = mid - 1
         
         return False
+
+            
+
