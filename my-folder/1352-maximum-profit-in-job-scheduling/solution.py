@@ -1,45 +1,28 @@
 class Solution:
-    def jobScheduling(self, starttime: List[int], endtime: List[int], profit: List[int]) -> int:
-        
-        # find the last non-conflicting job with current job
-        jobs = [(start, end, p) for start, end, p in zip(starttime, endtime, profit)]
+    def jobScheduling(self, startTime: List[int], endTime: List[int], profit: List[int]) -> int:
 
-        jobs.sort(key = lambda x: x[1])
+        tasks = sorted(zip(startTime, endTime, profit))
+        startTimes = [t[0] for t in tasks]
+
         self.memo = {}
 
-        return self.maxProfitJobs(jobs, len(jobs)-1)
-    
-    def maxProfitJobs(self, jobs, n):
+        return self.helper(tasks, startTimes, 0)
 
-        if n < 0:
+    def helper(self, tasks, startTimes, idx):
+
+        if idx == len(tasks):
             return 0
-        
-        if n == 0:
-            return jobs[n][2]
-        
-        if n in self.memo:
-            return self.memo[n]
-        
-        i = self.findLastNonConflictJob(jobs, n)
-        # print(i,n)
-        include = self.maxProfitJobs(jobs, i) + jobs[n][2]
-        exclude = self.maxProfitJobs(jobs, n-1)
+        if idx in self.memo:
+            return self.memo[idx]
 
-        self.memo[n] = max(include, exclude)
-        return self.memo[n]
-    
-    def findLastNonConflictJob(self, jobs, n):
+        # find the 1st task that has start time > idx end time
+        next_idx = bisect.bisect_left(startTimes, tasks[idx][1])
+
+        skip = self.helper(tasks, startTimes, idx+1)
+
+        self.memo[idx] = max(
+            skip,
+            self.helper(tasks, startTimes, next_idx) + tasks[idx][2]
+        )
         
-        start = 0
-        end = n-1
-        ans = -1
-        while start <= end:
-            mid = (start + end)//2
-            if jobs[mid][1] <= jobs[n][0]:
-                ans = mid
-                start = mid + 1
-            else:
-                end = mid - 1
-
-        return ans
-
+        return self.memo[idx]
