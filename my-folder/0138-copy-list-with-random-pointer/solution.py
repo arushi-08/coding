@@ -10,25 +10,24 @@ class Node:
 class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
         
-        # create a copy of the entire list
-        # create new head
-        # go to every next create new head
-        # store og node : new node in a map
+        if not head: return 
+        
+        old_to_new = {}
 
-        hmap = {}
         curr = head
+
         while curr:
-            hmap[curr] = Node(curr.val)
+            old_to_new[curr] = Node(curr.val)
             curr = curr.next
         
-        hmap[None] = None
+        copy_curr = old_to_new[head]
         curr = head
-        while curr:
-            hmap[curr].next = hmap[curr.next]
-            hmap[curr].random = hmap[curr.random]
+        while copy_curr:
+            copy_curr.next = old_to_new.get(curr.next)
+            copy_curr.random = old_to_new.get(curr.random)
+            copy_curr = copy_curr.next
             curr = curr.next
         
-        return hmap[head]
-        
+        return old_to_new[head]
 
-        
+
