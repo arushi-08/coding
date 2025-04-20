@@ -1,60 +1,42 @@
-class Node:
-    def __init__(self, key, val=0):
-        self.key = key
-        self.val = val
-        self.next = None
-        self.prev = None
-
+import threading
 class LRUCache:
+    """
+    how to do LRU?
+        track:
+            doubly LL -> push element to beg of LL
+                to pop element when capacity reached in O(1)
+            hashmap to get & put in cache in O(1)
+    """
 
     def __init__(self, capacity: int):
-        self.hmap = {}
-        self.size = capacity
-        self.head = Node(-1)
-        self.tail = Node(-1)
-        self.head.next = self.tail
-        self.tail.prev = self.head
+        self.cachemap = OrderedDict()
+        self.capacity = capacity
+        self.lock = threading.Lock()
 
     def get(self, key: int) -> int:
-        if key not in self.hmap:
-            return -1
-        
-        node = self.hmap[key]
-        self._remove(node)
-        self._move_to_top(node)
-        return node.val
+        with self.lock:
+            if key in self.cachemap:
+                value = self.cachemap.pop(key)
+                self.cachemap[key] = value
+                return self.cachemap[key]
+        return -1
 
     def put(self, key: int, value: int) -> None:
-        if key in self.hmap:
-            node = self.hmap[key]
-            node.val = value
-            self._remove(node)
-            self._move_to_top(node)
-        else:
-            if len(self.hmap) == self.size:
-                if self.tail.prev != self.head:
-                    remove_node = self.tail.prev
-                    self._remove(remove_node)
-                    del self.hmap[remove_node.key]
-            new_node = Node(key, value)
-            self.hmap[key] = new_node
-            self._move_to_top(new_node)
+        
+        with self.lock:
+            if key in self.cachemap:
+                self.cachemap.pop(key)
+            
+            elif len(self.cachemap) == self.capacity:
+                self.cachemap.popitem(last=False)
+
+            self.cachemap[key] = value
+
+    """
+    How would you make your cache safe for concurrent get / put calls?
 
 
-    def _remove(self, node):
-        prev_node = node.prev
-        next_node = node.next
-        prev_node.next = next_node
-        next_node.prev = prev_node
-        node.prev = None
-        node.next = None
-    
-    def _move_to_top(self, node):
-        head_next = self.head.next
-        self.head.next = node
-        node.prev = self.head
-        node.next = head_next
-        head_next.prev = node
+    """
 
 # Your LRUCache object will be instantiated and called as such:
 # obj = LRUCache(capacity)
