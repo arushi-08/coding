@@ -1,28 +1,30 @@
 class Solution:
     def jobScheduling(self, startTime: List[int], endTime: List[int], profit: List[int]) -> int:
+        # we have n jobs
+        # no overlap 
+        # max profit
+        # use heap to track max current profit
+        # but current max may not be global max
+        # dp?
+        times = sorted(zip(startTime, endTime, profit), key=lambda x: x[1])
 
-        tasks = sorted(zip(startTime, endTime, profit))
-        startTimes = [t[0] for t in tasks]
+        n = len(times)
 
-        self.memo = {}
+        dp = [0] * (n+1)
+        end_times = [t[1] for t in times]
+        for i in range(1, n+1):
+            
+            # don't take current profit
+            dp[i] = dp[i-1]
 
-        return self.helper(tasks, startTimes, 0)
+            idx_end_before_i_start = bisect.bisect_right(end_times, times[i-1][0]) 
+            
+            # choice
+            dp[i] = max(dp[i], dp[idx_end_before_i_start] + times[i-1][2]) 
 
-    def helper(self, tasks, startTimes, idx):
+        return dp[-1]
 
-        if idx == len(tasks):
-            return 0
-        if idx in self.memo:
-            return self.memo[idx]
-
-        # find the 1st task that has start time > idx end time
-        next_idx = bisect.bisect_left(startTimes, tasks[idx][1])
-
-        skip = self.helper(tasks, startTimes, idx+1)
-
-        self.memo[idx] = max(
-            skip,
-            self.helper(tasks, startTimes, next_idx) + tasks[idx][2]
-        )
-        
-        return self.memo[idx]
+"""
+why can we memoize this solution?
+is last_used_end_time repeating? is that why?
+"""
