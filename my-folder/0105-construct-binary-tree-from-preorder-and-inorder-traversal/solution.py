@@ -7,25 +7,35 @@
 class Solution:
     def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
         
+        # construct binary tree from preorder and inorder
+        # 3,9,20,15,7 pre | 9,3,15,20,7 inorder
+        # 
+
         if not preorder:
             return
-
-        inorder_val_to_idx = {}
-        for i in range(len(inorder)):
-            inorder_val_to_idx[inorder[i]] = i
         
-        preorder_idx = 0
-        def helper(st, ed):
-            nonlocal preorder_idx
-            if st > ed:
+        self.pre_index=0
+
+        inorder_to_pos = {v:i for i,v in enumerate(inorder)}
+
+        def dfs(st, ed):
+            """
+            idea:
+            preorder first element is always the current root
+            the left of this root in inorder is left subtree space and same for right
+            find the inorder_ed[currnode.val], and pass it to next recursion
+            keep doing self.pre_index += 1, that's all
+            """
+            if st >= ed:
                 return
-            root_val = preorder[preorder_idx] # root is always at preorder_idx, because otherwise inorder would be empty i.e., st > ed, which is base case 
-            preorder_idx += 1
-            root = TreeNode(root_val)
-            root.left = helper(st, inorder_val_to_idx[root_val]-1)
-            root.right = helper(inorder_val_to_idx[root_val]+1, ed)
-            return root
-        
-        return helper(0, len(inorder)-1)
 
-         
+            node = TreeNode(preorder[self.pre_index])
+            self.pre_index += 1
+            inorder_ed = inorder_to_pos[node.val]
+
+            node.left = dfs(st, inorder_ed)
+            node.right = dfs(inorder_ed+1, ed)
+
+            return node
+
+        return dfs(0, len(inorder))
