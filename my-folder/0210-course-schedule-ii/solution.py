@@ -1,33 +1,30 @@
 class Solution:
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
         
-        prereq_to_course_map = defaultdict(list)
-        course_to_prereq_count_map = {}
 
+        # map from prereq to coureses
+        prereq_to_course_map = defaultdict(list)
+        course_prereq_count = {}
         for course, prereq in prerequisites:
             prereq_to_course_map[prereq].append(course)
-            course_to_prereq_count_map[course] = course_to_prereq_count_map.get(course, 0) + 1
+            course_prereq_count[course] = course_prereq_count.get(course, 0) + 1
         
-        res = []
+        result = []
         for i in range(numCourses):
-            if i not in course_to_prereq_count_map:
-                res.append(i)
-
-        queue = deque(res)
-
-        while queue:
-            curr = queue.popleft()
-
-            for neigh in prereq_to_course_map[curr]:
-                course_to_prereq_count_map[neigh] -= 1
-
-                if course_to_prereq_count_map[neigh] == 0:
-
-                    res.append(neigh)
-                    queue.append(neigh)
-                    del course_to_prereq_count_map[neigh]
+            if i not in course_prereq_count:
+                result.append(i)
         
-        if course_to_prereq_count_map == {}:
-            return res
-        return []
+        queue = deque(result)
+        while queue:
+            curr = queue.pop()
+            for nextcourse in prereq_to_course_map[curr]:
+                course_prereq_count[nextcourse] -= 1
+                if course_prereq_count.get(nextcourse) == 0:
+                    queue.append(nextcourse)
+                    result.append(nextcourse)
+
+        if len(result) != numCourses:
+            return []
+        return result
+
 
