@@ -8,18 +8,17 @@ class Solution:
 
         start = 0
         end = 0
-        currset = set()
+        lastseen = {}
         maxlength = 0
 
-        while end < len(s):
-            # abcabcbb
-            while start < end and s[end] in currset:
-                currset.remove(s[start])
-                start += 1
+        for end in range(len(s)):
+
+            if s[end] in lastseen and lastseen[s[end]] >= start:
+                start = lastseen[s[end]] + 1
             
-            currset.add(s[end])
+            lastseen[s[end]] = end
             maxlength = max(maxlength, end - start + 1)
-            end += 1
+        
         
         return maxlength
 
