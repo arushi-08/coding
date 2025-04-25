@@ -1,33 +1,41 @@
 class Solution:
     def findAllConcatenatedWordsInADict(self, words: List[str]) -> List[str]:
         
-        words.sort(key=lambda x:len(x))
-        words_set = set()
-        res = []
-        self.memo = {}
+        """
+        return - [concat words]
+        
+        given a word, check if it can be broken
 
-        for i, word in enumerate(words): #O(N)
-            
-            if self.wordbreak(word, words_set):
-                res.append(word)
-            words_set.add(word)
-        return res
-    
-    def wordbreak(self, target_word, words_set):
-        
-        def helper(word):
-            if word in words_set:
+        """
+
+
+        wordsset = set()
+        words = sorted(words, key=lambda x:len(x))
+
+        def can_break(word, idx):
+            if idx == len(word):
                 return True
-            if word in self.memo:
-                return self.memo[word]
             
-            for i in range(1, len(word)):
-                if word[:i] in words_set and helper(word[i:]):
-                    self.memo[word] = True
+            if idx in memo:
+                return memo[idx]
+
+            for i in range(1, len(word[idx:])):
+                if (
+                    ''.join(word[idx:idx+i]) in wordsset and can_break(word, idx+i)
+                ):
+                    memo[idx] = True
                     return True
-                
-            self.memo[word] = False
-            return False
+
+            memo[idx] = ''.join(word[idx:]) in wordsset and idx > 0
+            return memo[idx]
+
+        results = []
+        for i, word in enumerate(words):
+            if i > 0:
+                memo = {}
+                if can_break(list(word), 0):
+                    results.append(word)
+            wordsset.add(word)
         
-        return helper(target_word)
+        return results
 
