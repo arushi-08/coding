@@ -1,22 +1,49 @@
 class Solution:
     def generateParenthesis(self, n: int) -> List[str]:
         
-        ans = []
-        def dfs(res, left_count, right_count):
-            if len(res)==n*2:
-                ans.append(''.join(res))
+        # n pairs of parentheses, generate all
+        # ((()))
+        """
+        n , well-formed
+        (((
+        i=1
+
+        (
+            
+        )
+
+        (
+        open() (
+        close() )
+
+        "(" 
+        )/(
+        
+        """
+
+        results = []
+
+        def dfs(n_open, n_close, curr_result):
+            nonlocal n
+
+            if len(curr_result) == 2*n:
+                results.append(''.join(curr_result))
                 return
             
-            if left_count < n:
-                res.append('(')
-                dfs(res, left_count+1, right_count)
-                res.pop()
+            if n_open < n:
+                dfs(n_open+1, n_close, curr_result + ['('])
             
-            if right_count < left_count:
-                res.append(')')
-                dfs(res, left_count, right_count+1)
-                res.pop()
+            if n_open > n_close:
+                dfs(n_open, n_close+1, curr_result + [')'] )
+            
+        
+        dfs(1, 0, ['('])
+        return results
 
-        dfs([], 0, 0)
-
-        return ans
+        # n=3
+        # n_open = 1
+        # n_open = 2
+        # n_open = 3
+        # n_close = 1
+        # ((()))
+        # 
