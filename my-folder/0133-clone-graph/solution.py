@@ -5,32 +5,26 @@ class Node:
         self.val = val
         self.neighbors = neighbors if neighbors is not None else []
 """
-from collections import deque, defaultdict
+
 from typing import Optional
 class Solution:
     def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
-        
-        if not node: return
+        """
+        hashmap{ curr_node: clone_node }
+        """
+        if not node: return 
+        # clone graph
+        clone_map = {node: Node(node.val)}
+        queue = deque([node])
 
-        visited = {}
-        
-        copynode = self.helper(node, visited)
-
-        return copynode
-        
-    def helper(self, node, visited):
-
-        queue = deque()
-        copynode = Node(node.val)
-        queue.append(node)
-        visited[node] = copynode
         while queue:
-            og = queue.popleft()
-            for neigh in og.neighbors:
-                if neigh not in visited:
-                    visited[neigh] = Node(neigh.val)
+            curr = queue.popleft()
+            for neigh in curr.neighbors:
+                if neigh not in clone_map:
+                    clone_map[neigh] = Node(neigh.val)
                     queue.append(neigh)
-                visited[og].neighbors.append(visited[neigh])
+                clone_map[curr].neighbors.append( clone_map[neigh] )
         
-        return visited[node]
+        return clone_map[node]
+
 
