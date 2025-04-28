@@ -1,18 +1,26 @@
 class Solution:
     def getSumAbsoluteDifferences(self, nums: List[int]) -> List[int]:
         
-        psum = []
-        cursum = 0
+        # get sum of abs diff
+        # 2,3,5
+
+        # sum (abs (curr elem - all others) )
+        # sum curr elem * n - sum of other elems
+
+        psum = [0]
         for num in nums:
-            cursum += num
-            psum.append(cursum)
+            psum.append(num + psum[-1])
 
-        ans = [0] * len(nums)
-        total = sum(nums)
-        for i in range(len(nums)):
-            if i == 0 :
-                ans[i] = ((cursum - psum[i]) - nums[i] * (len(nums) - 1 - i))
-            else:
-                ans[i] = (nums[i] * (i) - psum[i-1]) + ((cursum - psum[i]) - nums[i] * (len(nums) - 1 - i))
+        n = len(nums)
+        tsum = sum(nums)
+        result = []
+        for i, num in enumerate(nums):
+            currsum = 0
+            for start, end in [(0, i), (i+1, n-1)]:
+                
+                currsum += abs(num * (end - start + 1) - (psum[end+1] - psum[start]) )
+            
+            result.append( currsum )
+        
+        return result
 
-        return ans
