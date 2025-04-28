@@ -1,34 +1,36 @@
 class Solution:
     def decodeString(self, s: str) -> str:
-        
-        # use stack to store substrings
-        # store digits & substrings in stack
-        # when i=']':
-        #       pop stack -> substring
-        #       substring * digits -> stack
-        # in the end read from stack
 
-
+        result = []
         stack = []
         i = 0
-
+        digit = 0
+        curr_scope = []
         while i < len(s):
-            if s[i] == ']':
-                substring = ''
-                while stack[-1] != '[':
-                    substring = stack.pop() + substring
-                if stack[-1] == '[':
-                    stack.pop()
-                digit = ''
-                while stack and stack[-1].isdigit():
-                    digit = stack.pop() + digit
-                stack.append(substring * int(digit))
+            while s[i].isdigit():
+                digit = digit * 10 + int(s[i])
+                i += 1
+            
+            if s[i] == '[':
+                # new scope
+                stack.append([digit, curr_scope])
+                digit = 0
+                curr_scope = []
+                i += 1
+            
+            elif s[i] == ']':
+                # curr scope ended
+                old_digit, old_scope = stack.pop()
+                add_str = old_digit * ''.join(curr_scope)
+                old_scope.append(add_str)
+                curr_scope = old_scope
+                i += 1
+            
             else:
-                stack.append(s[i])
-            i += 1
-
-        ans = ''
-        while stack:
-            ans = stack.pop() + ans
+                curr_scope.append(s[i])
+                i += 1
         
-        return ans
+        return ''.join(curr_scope)
+
+
+
