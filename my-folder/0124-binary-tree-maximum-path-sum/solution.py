@@ -7,32 +7,32 @@
 class Solution:
     def maxPathSum(self, root: Optional[TreeNode]) -> int:
         
-        # at each root calculate max path sum from each child
-        maxsum = set()
-        self.helper(root, maxsum)
-        return max(maxsum)
-    
-    def helper(self, root, maxsum):
+        # path in BT
+        # max path sum 
+        """
+        at each node, know max path through that node
+        pass to the parent, max path through that node
+        also track max path either on left or right side
+        """
+        if not root: return 0
+        maxpath = root.val
 
-        if not root: return -float('inf')
+        def dfs(node):
+            nonlocal maxpath
 
-        left_child, right_child = -float('inf'), -float('inf')
-        if root.left:
-            left_child = self.helper(root.left, maxsum)
-        if root.right:
-            right_child = self.helper(root.right, maxsum)
-        
-        maxsum.add(
-            max(root.val, left_child, right_child, 
-            root.val+left_child, root.val+right_child, 
-            root.val+left_child+right_child)
+            if not node:
+                return 0
+            
+            leftmaxpath = max(dfs(node.left), 0 )
+            rightmaxpath = max(dfs(node.right), 0 )
+
+            maxpath = max(
+                maxpath, 
+                leftmaxpath + node.val + rightmaxpath,
             )
 
-        result = max(root.val, root.val+left_child, root.val+right_child)
-
-        # print('maxsum', maxsum,'root', root.val, 'result', result)
-        return result
-
-
+            return max(leftmaxpath, rightmaxpath) + node.val
         
+        dfs(root)
 
+        return maxpath
