@@ -1,30 +1,52 @@
 class Solution:
     def jobScheduling(self, startTime: List[int], endTime: List[int], profit: List[int]) -> int:
-        # we have n jobs
-        # no overlap 
-        # max profit
-        # use heap to track max current profit
-        # but current max may not be global max
-        # dp?
-        times = sorted(zip(startTime, endTime, profit), key=lambda x: x[1])
+        
+        # n jobs where every job is scheduled to be done from starttime to endtime
+        # profit[i]
+        # maxprofit - no 2 jobs in subset with overlapping time range
 
-        n = len(times)
+        # starttime = [1,2,3,3]
+        # endtime   = [3,4,5,6]
+        # profit = [50,10,40,70]
 
+        """
+        dp = 
+        pick, not pick
+        """
+
+        jobs = [[s, e, p] for s, e, p in zip(startTime, endTime, profit) ]
+        jobs.sort()
+
+        new_start_times = [e[0] for e in jobs]
+
+        # def helper(idx, prev_pick_idx):
+        #     if idx == len(jobs):
+        #         return 0
+            
+        #     current_not_pick = helper(idx+1, prev_pick_idx)
+
+        #     next_idx = bisect.bisect_left(new_start_times, 
+        #         jobs[idx][1] 
+        #     )
+        #     current_pick = helper(next_idx, idx) + jobs[idx][2]
+
+        #     return max(
+        #         current_not_pick, current_pick
+        #     )
+
+        n = len(jobs)
         dp = [0] * (n+1)
-        end_times = [t[1] for t in times]
-        for i in range(1, n+1):
+
+        for i in range(n-1, -1, -1):
             
-            # don't take current profit
-            dp[i] = dp[i-1]
-
-            idx_end_before_i_start = bisect.bisect_right(end_times, times[i-1][0]) 
+            start, end, curr_profit = jobs[i]
             
-            # choice
-            dp[i] = max(dp[i], dp[idx_end_before_i_start] + times[i-1][2]) 
+            next_idx = bisect.bisect_left( new_start_times, end )
+            
+            pick = dp[next_idx] + curr_profit
+            not_pick = dp[i+1]
 
-        return dp[-1]
+            dp[i] = max(not_pick, pick)
 
-"""
-why can we memoize this solution?
-is last_used_end_time repeating? is that why?
-"""
+        return dp[0]
+
