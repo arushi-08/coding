@@ -1,30 +1,25 @@
 class Solution:
     def romanToInt(self, s: str) -> int:
         
-        dict1={'I':1, 'V':5, 'X':10, 'L':50, 'C':100, 'D':500, 'M':1000}
-        
-        if len(s) == 1:
-            return dict1[s]
-        
-        
-        ans = 0
-        skip = False
-        for i in range(len(s)-1):
-            if skip:
-                skip = False
-                continue
-            print(s[i])
-            if dict1[s[i]] >= dict1[s[i+1]]:
-                ans += dict1[s[i]]
-                print(s[i], dict1[s[i]], ans)
+        # 7 symbols
+        # number can be < 4, < 9, < 40, < 90
+        # 35 - XXXV
+        # largest number
+        sym_to_int_map = {
+            'I':1, 'V':5, 'X':10, 'L':50,
+            'C':100, 'D':500, 'M':1000
+        }
+
+        num_val = sym_to_int_map[s[0]]
+
+        for i in range(1, len(s)):
+
+            curr_num = sym_to_int_map[s[i]]
             
-            elif dict1[s[i]] < dict1[s[i+1]]:
-                ans += dict1[s[i+1]] - dict1[s[i]]
-                skip = True
-                print('elif',s[i], dict1[s[i]], ans)
-                
+            if not num_val or sym_to_int_map[s[i-1]] >= curr_num :
+                num_val += curr_num
+            else:
+                num_val += curr_num - 2 * sym_to_int_map[s[i-1]]
+
+        return num_val
         
-        if len(s) >=2 and dict1[s[-2]] >= dict1[s[-1]]:
-            ans += dict1[s[-1]]
-        
-        return ans
