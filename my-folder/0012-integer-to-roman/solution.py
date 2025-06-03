@@ -1,6 +1,5 @@
 class Solution:
     def intToRoman(self, num: int) -> str:
-        
         int_n_roman = [[1,'I'],
         [4,'IV'],
         [5,'V'],
@@ -15,11 +14,17 @@ class Solution:
         [900,'CM'],
         [1000,'M']]
 
-        result = ''
-        for val, sym in reversed(int_n_roman):
-            if num // val:
-                result += (sym * (num//val))
-                num = num % val
+        # start right to left
 
-        return result
+        # consider the number of 10's 
+        place = 0
+        res = []
+
+        for val, sym in reversed(int_n_roman):
+
+            if num // val:
+                res.append(sym * (num//val))
+                num %= val
+        
+        return ''.join(res)
         
