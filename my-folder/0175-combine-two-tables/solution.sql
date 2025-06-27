@@ -1,4 +1,5 @@
-# Write your MySQL query statement below
+-- Write your PostgreSQL query statement below
+
 
 select firstName, lastName, city, state
 from person p left join address a
