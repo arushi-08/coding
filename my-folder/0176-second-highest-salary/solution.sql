@@ -1,14 +1,10 @@
-# Write your MySQL query statement below
+-- Write your PostgreSQL query statement below
 
-select ( 
-    (select salary
-    from employee
-    group by salary
-    order by salary desc
-    limit 1 offset 1
-    
-    )
-) as SecondHighestSalary 
+-- 2nd highest distinct
 
-
-
+select (
+select distinct salary 
+from employee
+order by salary desc
+limit 1 offset 1
+) as SecondHighestSalary
