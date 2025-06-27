@@ -1,13 +1,12 @@
 # Write your MySQL query statement below
 
-select name from
-employee 
-where id in (
+-- find managers with atleast 5 direct reports
+
+select e.name as name
+from employee as e inner join (
     select managerId
-    from (
-        select *, ifnull(managerId, 0)
-        from employee
-    ) as e
+    from employee
     group by managerId
-    having count(id) >= 5
-)
+    having count(*) >= 5
+) as me
+on e.id = me.managerId
