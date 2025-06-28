@@ -1,34 +1,31 @@
 class Solution:
     def minRemoveToMakeValid(self, s: str) -> str:
         
-        open_bracket = 0
-
-        new_s = ''
-        open_bracket_idx = set()
-        new_s_i = 0
-        for i in s:
-            if i == '(':
-                open_bracket += 1
-
-            elif i == ')':
-                open_bracket -= 1
-                if open_bracket_idx:
-                    open_bracket_idx.pop()
+        if not s:
+            return s
+        
+        res = []
+        open_count = 0
+        for i in range(len(s)):
+            if s[i] == '(':
+                open_count += 1
+            elif s[i] == ')':
+                open_count -= 1
             
-            if open_bracket < 0:
-                open_bracket = 0
+            if open_count >= 0:
+                res.append(s[i])
             else:
-                new_s += i
-                if i == '(':
-                    open_bracket_idx.add(new_s_i)
-                new_s_i += 1
-                
-        ans = ''
-        if open_bracket:
-            for i in range(len(new_s)):
-                if i not in open_bracket_idx:
-                    ans += new_s[i]
-        else:   
-            ans = new_s
+                open_count = 0 
+        
+        if open_count:
+            i = len(res) - 1
+            while i >= 0:
+                if open_count and res[i] == '(':
+                    res[i] = -1
+                    open_count -= 1
+                i -= 1
+        return ''.join([r for r in res if r != -1])
 
-        return ans
+        
+
+                
