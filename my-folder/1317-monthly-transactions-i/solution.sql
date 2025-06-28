@@ -1,12 +1,17 @@
-# Write your MySQL query statement below
+-- Write your PostgreSQL query statement below
 
--- find for each month and country, total num of transactions and their total amount
--- num of approved transaction, and total amount
-
-
-select date_format(trans_date, '%Y-%m') as month, country, count(*) as trans_count, sum(amount) as trans_total_amount, 
-sum(if(state='approved', 1, 0)) as approved_count,
-sum(if(state='approved', amount, 0)) as approved_total_amount
-    from transactions
-    group by country, date_format(trans_date, '%Y-%m')
+select to_char(trans_date, 'YYYY-mm') as month, 
+country, 
+count(*) as trans_count,
+count(case when state = 'approved' then 1 end) as approved_count,
+coalesce(
+    sum(amount),
+    0
+ ) as trans_total_amount,
+coalesce(
+    sum(case when state = 'approved' then amount end), 
+    0
+) as approved_total_amount
+from transactions
+group by to_char(trans_date, 'YYYY-mm'), country
 
