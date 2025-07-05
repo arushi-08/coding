@@ -7,38 +7,47 @@
 class Solution:
     def verticalOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
         
-        # looks like inorder
-        # except put upper level nodes first
+        # given root of bt, return vertical order traversal of its nodes values
+        # (from top to bottom, column to column)
 
-        path = self.inorder(root, 0, 0)
-        # path = [[(3,0)], [(9,1), (4,2)]]
-        # print("path", path)
-        path = {k:v for k, v in sorted(path.items())}
-        
-        ans = []
-        for k in path:
-            temp = []
-            for i in path[k]:
-                temp.append(i[0])
-            ans.append(temp)
-        return ans
-    
-    def inorder(self, root, level, depth):
+        # [9],[3,15],[20],[7]
+
+        # left most, store height
+        # [9], [3, 15], 20, 7
+
+        # [left kids] + [current] + [right kids] 
+        # merge parent with left / right kids
+        # left kids = f(parent.left)
+        # merge left kids' right kid with parent
+        # [left kids] + [current] + [parent + right kids] 
+        # 
+        # parent.left, height - 1
+
+        # parent.right, height + 1
+
 
         if not root:
-            return {}
+            return []
         
-        left = self.inorder(root.left, level-1, depth+1)
-        if level in left:
-            left[level].insert(0, (root.val, depth))
-        else:
-            left[level] = [(root.val, depth)]
-        right = self.inorder(root.right, level+1, depth+1)
+        memo = defaultdict(list)
+
+        def helper(node, height, level):
+            if not node:
+                return []
+
+            memo[height].append((level, node.val))
+            helper(node.left, height - 1, level + 1)
+            helper(node.right, height + 1, level + 1)
+            
+        helper(root, 0, 0)
         
-        for k in right:
-            if k in left:
-                left[k].extend(right[k])
-                left[k].sort(key=lambda x: x[1])
-            else:
-                left[k] = right[k]
-        return left
+        res = []
+        memo = sorted(memo.items(), key=lambda x:x[0])
+
+        for k, v in memo:
+            v_list = sorted(v, key=lambda x: x[0])
+            temp_res = [i[-1] for i in v_list]
+            res.append(temp_res)
+
+        return res
+
