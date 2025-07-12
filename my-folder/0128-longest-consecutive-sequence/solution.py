@@ -1,23 +1,23 @@
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
         
-
-        # cons elements can be unordered
-
-        # sort it and see
         if not nums: return 0
-        numset = set(nums)
-        longest_cons_elems = 1
 
-        for num in numset:
-            if num-1 not in numset:
-                curr_streak = 1
-                nextnum = num + 1
-                while nextnum in numset:
-                    curr_streak += 1
-                    nextnum += 1
+        nums.sort()
+        max_length = 0
+        length = 1
+        # [1,2,3]
+        i = 0
+        print(nums)
+        while i < len(nums)-1:
+            # print('top i', i)
+            while i < len(nums) - 1 and nums[i] == nums[i+1]:
+                i += 1
                 
-                longest_cons_elems = max(longest_cons_elems, curr_streak)
-                
-        
-        return longest_cons_elems
+            if i < len(nums)-1 and nums[i] + 1 == nums[i+1]:
+                length += 1
+            else:
+                max_length = max(max_length, length)
+                length = 1
+            i += 1
+        return max(max_length, length)
