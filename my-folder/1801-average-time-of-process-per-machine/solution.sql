@@ -1,18 +1,34 @@
-# Write your MySQL query statement below
+-- Write your PostgreSQL query statement below
 
--- end time - start time / # processes
 
-with st as (select machine_id, process_id, timestamp
-from activity
-where activity_type = 'start'),
-ed as (select machine_id, process_id, timestamp
-from activity
-where activity_type = 'end')
+-- factory has machines
+-- each with same processes
+-- find avg time each machine takes
 
-select machine_id, round(avg(difference), 3) as processing_time
-from(
-    select st.machine_id, st.process_id, (ed.timestamp - st.timestamp) as difference
-    from st join ed
-    on st.machine_id = ed.machine_id and st.process_id = ed.process_id
-) as d
-group by machine_id
+-- sum(end - start) / count(processes) group by machine
+
+WITH starttime AS (
+    SELECT
+        machine_id,
+        process_id,
+        timestamp as start_time
+    FROM activity
+    WHERE activity_type = 'start'
+),
+endtime AS (
+    SELECT
+        machine_id,
+        process_id,
+        timestamp as end_time
+    FROM activity
+    WHERE activity_type = 'end'
+)
+
+SELECT
+    s.machine_id,
+    round((SUM(end_time - start_time)::numeric/ count(*)), 3) AS processing_time
+FROM  starttime s
+JOIN endtime e
+    ON s.machine_id = e.machine_id
+    AND s.process_id = e.process_id
+GROUP BY s.machine_id
