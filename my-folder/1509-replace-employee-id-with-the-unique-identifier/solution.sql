@@ -1,6 +1,11 @@
-# Write your MySQL query statement below
+-- Write your PostgreSQL query statement below
 
-select unique_id, name
-from employees as e left join employeeuni as eu
-on e.id = eu.id
+-- show unique id of each user, if user doesn have u id replace with null
+
+SELECT
+    unique_id,
+    name
+FROM employees e
+LEFT JOIN employeeuni eu
+    ON e.id = eu.id
 
