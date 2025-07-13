@@ -1,10 +1,35 @@
-# Write your MySQL query statement below
 
-with st as (select * from students cross join subjects),
-e as (select student_id, subject_name, count(*) as attended_exams from examinations group by student_id, subject_name)
+-- find num times each student attended each exam 
 
-select st.student_id, student_name, st.subject_name, ifnull(attended_exams, 0) as attended_exams
-from st left join e
-on st.student_id=e.student_id and st.subject_name = e.subject_name
-group by st.student_id, st.subject_name
-order by st.student_id, st.subject_name
+WITH not_attended AS (
+    SELECT student_id, subject_name, 0 as attended
+    FROM students s, subjects
+    WHERE (s.student_id, subject_name) not in (
+        SELECT *
+        FROM examinations
+    )
+),
+total_examinations as (
+(SELECT *, 1 as attended
+FROM examinations)
+UNION ALL
+(SELECT * FROM not_attended)
+)
+
+SELECT
+    s.student_id,
+    s.student_name,
+    e.subject_name,
+    COALESCE(SUM(attended),0) as attended_exams
+FROM students s 
+JOIN total_examinations e
+    ON s.student_id = e.student_id
+
+GROUP BY 1, 2, 3
+ORDER BY 1
+
+-- SELECT *
+-- FROM students s 
+-- CROSS JOIN subjects sub
+-- LEFT JOIN examinations e
+--     ON s.student_id = e.student_id
