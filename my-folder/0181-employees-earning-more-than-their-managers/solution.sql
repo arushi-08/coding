@@ -1,7 +1,10 @@
-# Write your MySQL query statement below
+-- Write your PostgreSQL query statement below
 
+-- emp earning > manager
 
-select e1.name as employee
-from employee e1, employee e2
-where e1.managerId = e2.id and e1.salary > e2.salary
-
+SELECT
+    e.name as employee
+FROM employee e
+JOIN employee m
+    ON e.managerid = m.id
+    AND e.salary > m.salary
