@@ -1,13 +1,19 @@
--- Write your PostgreSQL query statement below
 
--- 
+-- 3 times
+
+
+
+WITH logs_idx AS (
+    SELECT *,
+    (id - ROW_NUMBER() OVER (PARTITION BY num ORDER BY id ))::integer as grp
+    FROM logs
+    ORDER BY id
+)
 
 SELECT DISTINCT
-    l1.num as ConsecutiveNums
-FROM logs l1
-JOIN logs l2
-    ON l1.id + 1 = l2.id
-    AND l1.num = l2.num
-JOIN logs l3
-    ON l1.id + 2 = l3.id
-    AND l2.num = l3.num
+    num AS ConsecutiveNums
+FROM logs_idx
+GROUP BY grp, num
+HAVING COUNT(*) >= 3
+
+-- select * from logs_idx/
