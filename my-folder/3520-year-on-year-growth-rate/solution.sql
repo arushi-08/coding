@@ -1,24 +1,17 @@
-# Write your MySQL query statement below
 
-
--- write a soln to calculate yoy growth rate for total spend for each product
--- 
--- 
--- 
--- 
-
-with agg_spend_yr as (select extract(year from transaction_date) as year, product_id, sum(spend) as curr_year_spend
-from user_transactions
-group by product_id, extract(year from transaction_date)),
-
-temp as (
-    select a1.year, a1.product_id, a1.curr_year_spend, a2.curr_year_spend as prev_year_spend
-from agg_spend_yr a1 left join agg_spend_yr a2
-on a1.product_id = a2.product_id and a1.year - 1 = a2.year
+WITH user_transactions_yr AS (
+    SELECT product_id, sum(spend) as spend, 
+    TO_CHAR(transaction_date, 'YYYY') as transaction_date
+    FROM user_transactions
+    GROUP BY product_id, TO_CHAR(transaction_date, 'YYYY')
 )
 
-select *,
-(case when prev_year_spend then round((curr_year_spend - prev_year_spend) * 100 / prev_year_spend, 2) else null end) as yoy_rate
-from temp
-order by product_id, year
-
+SELECT
+    CAST(transaction_date AS INTEGER) as year,
+    product_id,
+    spend as curr_year_spend,
+    LAG(spend) OVER w AS prev_year_spend,
+    ROUND(100.0 * (spend - LAG(spend) OVER w) / LAG(spend) OVER w, 2)AS yoy_rate
+FROM user_transactions_yr
+WINDOW w AS (PARTITION BY product_id ORDER BY transaction_date)
+ORDER BY product_id, transaction_date
