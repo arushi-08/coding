@@ -1,12 +1,18 @@
-# Write your MySQL query statement below
 
 
+-- top 3 uniq 
+With join_data_idx As
+(SELECT
+    d.name as department,
+    e.name as employee,
+    salary,
+    DENSE_RANK() OVER(PARTITION BY d.id ORDER BY salary DESC) as rn
+FROM employee e
+JOIN department d
+    ON e.departmentid = d.id)
 
-select Department, Employee, Salary
-from (
-        select d.name as Department, e.name as Employee, salary as Salary, dense_rank() over
-        (partition by d.name order by salary desc) as drnk
-    from employee e left join department d
-    on e.departmentId = d.id
-) as j
-where drnk <= 3
+
+SELECT
+    department, employee, salary
+FROM join_data_idx
+WHERE rn <= 3
