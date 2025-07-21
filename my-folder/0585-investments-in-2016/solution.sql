@@ -5,25 +5,15 @@
 -- same tiv_2015 as 1 + policy holders
 -- not located in same city as any other policy holder
 
-WITH unique_locations AS(
-    SELECT lat, lon
-    FROM insurance
-    GROUP BY lat, lon
-    HAVING COUNT(*) = 1 
-),
 
-same_tiv_2015 AS (
-    SELECT tiv_2015
+WITH count_insurance AS (
+    SELECT *,
+        COUNT(*) OVER(PARTITION BY tiv_2015) AS count_tiv_2015,
+        COUNT(*) OVER(PARTITION BY lat, lon) AS count_lat_lon
     FROM insurance
-    GROUP BY tiv_2015
-    HAVING COUNT(*) > 1
 )
 
 SELECT
-    ROUND(SUM(i.tiv_2016)::numeric, 2) as tiv_2016
-FROM insurance i
-JOIN unique_locations l
-ON i.lat = l.lat AND i.lon = l.lon
-JOIN same_tiv_2015 t
-ON i.tiv_2015 = t.tiv_2015
-
+    ROUND(SUM(tiv_2016)::numeric, 2) as tiv_2016
+FROM count_insurance
+WHERE count_tiv_2015 > 1 AND count_lat_lon = 1
